@@ -1,0 +1,15 @@
+{
+  "name": "pavion-staffing-platform",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Pavion Technologies - US Staffing ATS + CRM Enterprise Platform",
+  "scripts": {
+    "start": "concurrently \"npm run start:server\" \"npm run start:client\"",
+    "start:server": "cd server && npm run dev",
+    "start:client": "cd client && npm run dev",
+    "build": "cd server && npm run build && cd ../client && npm run build"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  }
+}

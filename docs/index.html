@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pavion Technologies – Staff Training & Documentation Portal</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+  <style>
+    body { font-family: 'Plus Jakarta Sans', sans-serif; }
+    code, pre { font-family: 'JetBrains Mono', monospace; }
+  </style>
+</head>
+<body class="bg-slate-900 text-slate-100 min-h-screen">
+
+  <!-- Top Announcement Bar -->
+  <div class="bg-gradient-to-r from-blue-700 via-indigo-600 to-teal-500 py-2.5 px-6 text-center text-sm font-semibold text-white shadow-md flex items-center justify-between">
+    <span class="flex items-center gap-2">
+      <span class="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse"></span>
+      Pavion Technologies US Staffing ATS + CRM Enterprise Platform – Training Center v2.4
+    </span>
+    <div class="flex items-center gap-4 text-xs font-bold">
+      <a href="http://localhost:5173" target="_blank" class="bg-white/20 hover:bg-white/30 px-3 py-1 rounded-md transition">🚀 Open Live App (Port 5173)</a>
+      <a href="http://localhost:5555" target="_blank" class="bg-white/20 hover:bg-white/30 px-3 py-1 rounded-md transition">🗄️ Prisma Studio (Port 5555)</a>
+      <a href="http://localhost:5055/api-docs" target="_blank" class="bg-white/20 hover:bg-white/30 px-3 py-1 rounded-md transition">📡 API Docs (Port 5055)</a>
+    </div>
+  </div>
+
+  <!-- Header -->
+  <header class="border-b border-slate-800 bg-slate-950/80 backdrop-blur sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto px-6 py-4 flex flex-wrap items-center justify-between gap-4">
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-xl bg-blue-600 flex items-center justify-center text-white font-black text-xl shadow-lg shadow-blue-500/30">
+          P
+        </div>
+        <div>
+          <h1 class="text-xl font-extrabold text-white tracking-tight">Pavion Technologies</h1>
+          <p class="text-xs text-slate-400 font-medium">Standalone Staff Training & Documentation Portal</p>
+        </div>
+      </div>
+
+      <!-- Quick Action Buttons -->
+      <div class="flex items-center gap-3">
+        <a href="Pavion_US_Staffing_User_Manual.pdf" download="Pavion_US_Staffing_User_Manual.pdf" class="inline-flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-500 text-white font-semibold rounded-lg shadow-lg shadow-blue-600/20 text-sm transition">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
+          Download Manual (PDF)
+        </a>
+        <a href="Pavion_Platform_Training_Video.gif" download="Pavion_Platform_Training_Video.gif" class="inline-flex items-center gap-2 px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 font-semibold rounded-lg text-sm transition">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"/></svg>
+          Download Video
+        </a>
+        <button onclick="window.print()" class="px-3 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 rounded-lg text-sm font-semibold transition" title="Print Manual">
+          🖨️ Print
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Container -->
+  <main class="max-w-7xl mx-auto px-6 py-8 space-y-12">
+
+    <!-- Section 1: Video Player & Walkthrough -->
+    <section class="bg-slate-950 border border-slate-800 rounded-2xl overflow-hidden shadow-2xl">
+      <div class="p-6 border-b border-slate-800 flex flex-wrap items-center justify-between gap-4 bg-slate-950/60">
+        <div>
+          <span class="text-xs font-bold uppercase tracking-wider text-blue-400 bg-blue-500/10 px-2.5 py-1 rounded-full border border-blue-500/20">Module 01 • Interactive Simulation</span>
+          <h2 class="text-2xl font-black text-white mt-2">Staff Training Video & Workflow Walkthrough</h2>
+          <p class="text-sm text-slate-400">Animated video demonstration covering candidate sourcing, client submittals, and gross margin calculations.</p>
+        </div>
+        <div class="flex items-center gap-2">
+          <button id="voiceToggle" onclick="toggleVoice()" class="px-3 py-1.5 rounded-lg bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-bold hover:bg-emerald-500/20 transition flex items-center gap-1.5">
+            🔊 Voice Narration: <span id="voiceStatus">ON</span>
+          </button>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-0">
+        <!-- Video Display -->
+        <div class="lg:col-span-2 bg-black flex flex-col items-center justify-center p-4 relative min-h-[480px]">
+          <div class="relative w-full max-w-2xl rounded-xl overflow-hidden border border-slate-800 shadow-2xl">
+            <img id="videoScreen" src="Pavion_Platform_Training_Video.gif" alt="Training Video Screen" class="w-full h-auto object-contain">
+            
+            <!-- Floating Badge -->
+            <div class="absolute top-4 left-4 bg-slate-950/90 backdrop-blur border border-slate-700 px-3 py-1.5 rounded-lg text-xs font-bold text-white flex items-center gap-2">
+              <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
+              <span id="chapterTitleDisplay">Chapter 1: Platform Overview & 4 Role Interfaces</span>
+            </div>
+          </div>
+
+          <!-- Video Progress Bar -->
+          <div class="w-full max-w-2xl mt-4 px-2">
+            <div class="w-full bg-slate-800 h-2 rounded-full overflow-hidden cursor-pointer" onclick="scrubVideo(event)">
+              <div id="videoProgressBar" class="bg-blue-500 h-full w-1/5 transition-all duration-300"></div>
+            </div>
+            <div class="flex items-center justify-between text-xs text-slate-400 mt-2 font-mono">
+              <span id="timeElapsed">00:15</span>
+              <span>Total Video Runtime: 02:30</span>
+            </div>
+          </div>
+
+          <!-- Subtitle Narration Box -->
+          <div class="w-full max-w-2xl mt-3 p-3 bg-slate-900/90 border border-slate-800 rounded-xl text-xs text-slate-300 italic">
+            🎙️ <strong class="text-white not-italic">Voice Narration:</strong> <span id="narrationText">Welcome to Pavion Technologies US Staffing ATS + CRM Enterprise Platform. The software provides 4 specialized role interfaces: Super Admin, Senior Recruiter, Account Manager, and Sales BDE.</span>
+          </div>
+        </div>
+
+        <!-- Video Chapters Menu -->
+        <div class="border-t lg:border-t-0 lg:border-l border-slate-800 bg-slate-950 p-6 flex flex-col justify-between">
+          <div>
+            <h3 class="text-sm font-bold uppercase tracking-wider text-slate-400 mb-4">Course Chapters (5 Lessons)</h3>
+            <div class="space-y-3">
+              
+              <button onclick="playChapter(0)" class="w-full text-left p-3.5 rounded-xl border border-blue-500/40 bg-blue-500/10 hover:bg-blue-500/20 transition flex items-start gap-3 group chapter-btn" data-chapter="0">
+                <span class="w-7 h-7 rounded-lg bg-blue-600 text-white flex items-center justify-center font-bold text-xs shrink-0 mt-0.5">01</span>
+                <div>
+                  <h4 class="text-sm font-bold text-white group-hover:text-blue-400 transition">Overview & 4 Role Interfaces</h4>
+                  <p class="text-xs text-slate-400 mt-0.5">Super Admin, Recruiter, AM, BDE</p>
+                </div>
+              </button>
+
+              <button onclick="playChapter(1)" class="w-full text-left p-3.5 rounded-xl border border-slate-800 bg-slate-900 hover:bg-slate-850 hover:border-slate-700 transition flex items-start gap-3 group chapter-btn" data-chapter="1">
+                <span class="w-7 h-7 rounded-lg bg-slate-800 text-slate-300 flex items-center justify-center font-bold text-xs shrink-0 mt-0.5">02</span>
+                <div>
+                  <h4 class="text-sm font-bold text-white group-hover:text-blue-400 transition">Topbar 1-Click Role Switcher</h4>
+                  <p class="text-xs text-slate-400 mt-0.5">Testing all roles without relogin</p>
+                </div>
+              </button>
+
+              <button onclick="playChapter(2)" class="w-full text-left p-3.5 rounded-xl border border-slate-800 bg-slate-900 hover:bg-slate-850 hover:border-slate-700 transition flex items-start gap-3 group chapter-btn" data-chapter="2">
+                <span class="w-7 h-7 rounded-lg bg-slate-800 text-slate-300 flex items-center justify-center font-bold text-xs shrink-0 mt-0.5">03</span>
+                <div>
+                  <h4 class="text-sm font-bold text-white group-hover:text-blue-400 transition">Candidate Pool (55 Indian Techies)</h4>
+                  <p class="text-xs text-slate-400 mt-0.5">OPT/CPT students, H1-B, Green Card</p>
+                </div>
+              </button>
+
+              <button onclick="playChapter(3)" class="w-full text-left p-3.5 rounded-xl border border-slate-800 bg-slate-900 hover:bg-slate-850 hover:border-slate-700 transition flex items-start gap-3 group chapter-btn" data-chapter="3">
+                <span class="w-7 h-7 rounded-lg bg-slate-800 text-slate-300 flex items-center justify-center font-bold text-xs shrink-0 mt-0.5">04</span>
+                <div>
+                  <h4 class="text-sm font-bold text-white group-hover:text-blue-400 transition">Enterprise Clients & Margins</h4>
+                  <p class="text-xs text-slate-400 mt-0.5">TCS, Infosys, Wipro, Gross Margin formula</p>
+                </div>
+              </button>
+
+              <button onclick="playChapter(4)" class="w-full text-left p-3.5 rounded-xl border border-slate-800 bg-slate-900 hover:bg-slate-850 hover:border-slate-700 transition flex items-start gap-3 group chapter-btn" data-chapter="4">
+                <span class="w-7 h-7 rounded-lg bg-slate-800 text-slate-300 flex items-center justify-center font-bold text-xs shrink-0 mt-0.5">05</span>
+                <div>
+                  <h4 class="text-sm font-bold text-white group-hover:text-blue-400 transition">Database Explorer & API Testing</h4>
+                  <p class="text-xs text-slate-400 mt-0.5">Prisma Studio (5555) & Swagger (5055)</p>
+                </div>
+              </button>
+
+            </div>
+          </div>
+
+          <div class="pt-6 border-t border-slate-800">
+            <a href="Pavion_Platform_Training_Video.gif" download class="w-full block text-center py-2.5 px-4 bg-slate-900 hover:bg-slate-800 border border-slate-700 rounded-xl text-xs font-bold text-slate-300 transition">
+              💾 Download Video Asset (.gif)
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 2: Direct PDF Document Viewer -->
+    <section class="bg-slate-950 border border-slate-800 rounded-2xl p-6 shadow-2xl">
+      <div class="flex flex-wrap items-center justify-between gap-4 mb-6 pb-4 border-b border-slate-800">
+        <div>
+          <span class="text-xs font-bold uppercase tracking-wider text-emerald-400 bg-emerald-500/10 px-2.5 py-1 rounded-full border border-emerald-500/20">Module 02 • Official Documentation</span>
+          <h2 class="text-2xl font-black text-white mt-2">Illustrated User Operations Manual (PDF Viewer)</h2>
+          <p class="text-sm text-slate-400">Complete 5-page manual with workflow diagrams, data dictionaries, and financial formulas.</p>
+        </div>
+
+        <div class="flex items-center gap-3">
+          <a href="Pavion_US_Staffing_User_Manual.pdf" target="_blank" class="px-4 py-2 bg-emerald-600 hover:bg-emerald-500 text-white font-bold rounded-lg text-xs transition flex items-center gap-1.5 shadow-lg shadow-emerald-600/20">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
+            Open in Fullscreen Tab
+          </a>
+          <a href="Pavion_US_Staffing_User_Manual.pdf" download="Pavion_US_Staffing_User_Manual.pdf" class="px-4 py-2 bg-blue-600 hover:bg-blue-500 text-white font-bold rounded-lg text-xs transition flex items-center gap-1.5 shadow-lg shadow-blue-600/20">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
+            Download PDF File (643 KB)
+          </a>
+        </div>
+      </div>
+
+      <!-- Embedded PDF Object / iFrame -->
+      <div class="w-full bg-slate-900 rounded-xl overflow-hidden border border-slate-800 shadow-inner h-[800px]">
+        <iframe src="Pavion_US_Staffing_User_Manual.pdf" class="w-full h-full border-0" title="Pavion US Staffing User Manual"></iframe>
+      </div>
+
+      <!-- 5-Page Gallery Grid -->
+      <div class="mt-8 pt-6 border-t border-slate-800">
+        <h3 class="text-sm font-bold uppercase tracking-wider text-slate-400 mb-4">Manual Pages Gallery (High-Resolution 150 DPI)</h3>
+        <div class="grid grid-cols-2 md:grid-cols-5 gap-4">
+          <div class="bg-slate-900 border border-slate-800 rounded-xl p-2 hover:border-blue-500 transition cursor-pointer" onclick="window.open('images/manual_page_1.png', '_blank')">
+            <img src="images/manual_page_1.png" alt="Page 1" class="w-full h-44 object-cover object-top rounded-lg">
+            <p class="text-xs font-bold text-center mt-2 text-slate-300">Page 1: Cover</p>
+          </div>
+          <div class="bg-slate-900 border border-slate-800 rounded-xl p-2 hover:border-blue-500 transition cursor-pointer" onclick="window.open('images/manual_page_2.png', '_blank')">
+            <img src="images/manual_page_2.png" alt="Page 2" class="w-full h-44 object-cover object-top rounded-lg">
+            <p class="text-xs font-bold text-center mt-2 text-slate-300">Page 2: Role Dashboards</p>
+          </div>
+          <div class="bg-slate-900 border border-slate-800 rounded-xl p-2 hover:border-blue-500 transition cursor-pointer" onclick="window.open('images/manual_page_3.png', '_blank')">
+            <img src="images/manual_page_3.png" alt="Page 3" class="w-full h-44 object-cover object-top rounded-lg">
+            <p class="text-xs font-bold text-center mt-2 text-slate-300">Page 3: 55 Candidates</p>
+          </div>
+          <div class="bg-slate-900 border border-slate-800 rounded-xl p-2 hover:border-blue-500 transition cursor-pointer" onclick="window.open('images/manual_page_4.png', '_blank')">
+            <img src="images/manual_page_4.png" alt="Page 4" class="w-full h-44 object-cover object-top rounded-lg">
+            <p class="text-xs font-bold text-center mt-2 text-slate-300">Page 4: CRM & Margins</p>
+          </div>
+          <div class="bg-slate-900 border border-slate-800 rounded-xl p-2 hover:border-blue-500 transition cursor-pointer" onclick="window.open('images/manual_page_5.png', '_blank')">
+            <img src="images/manual_page_5.png" alt="Page 5" class="w-full h-44 object-cover object-top rounded-lg">
+            <p class="text-xs font-bold text-center mt-2 text-slate-300">Page 5: DB & API</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 3: Essential Reference Cheat Sheet -->
+    <section class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      
+      <!-- Gross Margin Formula Card -->
+      <div class="bg-slate-950 border border-slate-800 rounded-2xl p-6 shadow-xl">
+        <h3 class="text-base font-extrabold text-blue-400 flex items-center gap-2 mb-3">
+          💰 US Staffing Gross Margin & Markup Calculation
+        </h3>
+        <p class="text-xs text-slate-400 mb-4">Every submission and placement automatically computes gross margin spread using this industry formula:</p>
+        
+        <div class="bg-slate-900 p-4 rounded-xl border border-slate-800 font-mono text-xs text-slate-200 space-y-2">
+          <p class="text-blue-400">Gross Margin ($/hr) = Bill Rate - Pay Rate</p>
+          <p class="text-emerald-400">Margin % = ((Bill Rate - Pay Rate) / Bill Rate) * 100</p>
+        </div>
+
+        <div class="mt-4 text-xs text-slate-300 space-y-1">
+          <p>• <strong>Example REQ-IND-101 at TCS America:</strong></p>
+          <p>• Bill Rate: <span class="text-white font-bold">$110.00/hr</span> | Pay Rate: <span class="text-white font-bold">$85.00/hr</span> (Rajesh Kulkarni C2C)</p>
+          <p>• Gross Profit Spread: <span class="text-emerald-400 font-bold">$25.00/hr</span> ($4,000.00 / month on 160 billable hours)</p>
+        </div>
+      </div>
+
+      <!-- 16-Stage Recruitment Funnel -->
+      <div class="bg-slate-950 border border-slate-800 rounded-2xl p-6 shadow-xl">
+        <h3 class="text-base font-extrabold text-emerald-400 flex items-center gap-2 mb-3">
+          ⚡ 16-Stage Recruitment Pipeline Stages
+        </h3>
+        <p class="text-xs text-slate-400 mb-4">Standard recruiter pipeline progression for US IT staffing:</p>
+        
+        <div class="grid grid-cols-2 gap-2 text-xs">
+          <div class="p-2 bg-slate-900 rounded-lg border border-slate-800">1. SOURCED</div>
+          <div class="p-2 bg-slate-900 rounded-lg border border-slate-800">2. SCREENING</div>
+          <div class="p-2 bg-slate-900 rounded-lg border border-slate-800">3. SHORTLISTED</div>
+          <div class="p-2 bg-slate-900 rounded-lg border border-slate-800">4. RTR REQUESTED</div>
+          <div class="p-2 bg-slate-900 rounded-lg border border-slate-800">5. RTR RECEIVED</div>
+          <div class="p-2 bg-slate-900 rounded-lg border border-slate-800">6. CLIENT SUBMITTED</div>
+          <div class="p-2 bg-slate-900 rounded-lg border border-slate-800">7. INTERVIEW SCHEDULED</div>
+          <div class="p-2 bg-emerald-950/60 text-emerald-400 rounded-lg border border-emerald-500/30 font-bold">8. PLACED / WON</div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="border-t border-slate-800 bg-slate-950 py-8 px-6 text-center text-xs text-slate-500 mt-16">
+    <p>Pavion Technologies Pvt. Ltd. – Enterprise US Staffing ATS + CRM Software</p>
+    <p class="mt-1">Locally Deployed on <a href="http://localhost:8080" class="text-blue-400 hover:underline">http://localhost:8080</a> | Confidential Operations Manual</p>
+  </footer>
+
+  <!-- Interactive JavaScript for Video & Narration -->
+  <script>
+    const chapters = [
+      {
+        title: "Chapter 1: Platform Overview & 4 Role Interfaces",
+        img: "images/manual_page_1.png",
+        script: "Welcome to Pavion Technologies US Staffing ATS + CRM Enterprise Platform. The software provides 4 specialized role interfaces: Super Admin, Senior Recruiter, Account Manager, and Sales BDE.",
+        time: "00:15"
+      },
+      {
+        title: "Chapter 2: Role Dashboards & 1-Click Role Switcher",
+        img: "images/manual_page_2.png",
+        script: "Switch roles instantly in the Topbar dropdown to test each role view with customized KPIs, sidebars, and specialized workflows without needing relogin.",
+        time: "00:45"
+      },
+      {
+        title: "Chapter 3: Candidate Talent Pool (55+ Indian Profiles)",
+        img: "images/manual_page_3.png",
+        script: "Explore 55 Indian tech professionals including international student grads on OPT and CPT visas from UT Dallas and Rutgers, plus senior H1-B and Green Card architects.",
+        time: "01:25"
+      },
+      {
+        title: "Chapter 4: Enterprise Clients & Gross Margin Formula",
+        img: "images/manual_page_4.png",
+        script: "Manage Indian IT giants including TCS America, Infosys, Wipro, and HCL America. Gross margin equals Bill Rate minus Pay Rate divided by Bill Rate times 100.",
+        time: "01:55"
+      },
+      {
+        title: "Chapter 5: Database Explorer & Verification Checklist",
+        img: "images/manual_page_5.png",
+        script: "Inspect all 18 database tables live in Prisma Studio at port 5555 and test REST APIs in Swagger at port 5055.",
+        time: "02:30"
+      }
+    ];
+
+    let currentChapter = 0;
+    let voiceEnabled = true;
+
+    function playChapter(idx) {
+      currentChapter = idx;
+      const ch = chapters[idx];
+      document.getElementById('videoScreen').src = ch.img;
+      document.getElementById('chapterTitleDisplay').innerText = ch.title;
+      document.getElementById('narrationText').innerText = ch.script;
+      document.getElementById('timeElapsed').innerText = ch.time;
+      document.getElementById('videoProgressBar').style.width = ((idx + 1) * 20) + '%';
+
+      // Update button styles
+      document.querySelectorAll('.chapter-btn').forEach((btn, i) => {
+        if (i === idx) {
+          btn.classList.add('border-blue-500/40', 'bg-blue-500/10');
+          btn.classList.remove('bg-slate-900', 'border-slate-800');
+        } else {
+          btn.classList.remove('border-blue-500/40', 'bg-blue-500/10');
+          btn.classList.add('bg-slate-900', 'border-slate-800');
+        }
+      });
+
+      if (voiceEnabled && 'speechSynthesis' in window) {
+        window.speechSynthesis.cancel();
+        const utter = new SpeechSynthesisUtterance(ch.script);
+        utter.rate = 1.0;
+        window.speechSynthesis.speak(utter);
+      }
+    }
+
+    function toggleVoice() {
+      voiceEnabled = !voiceEnabled;
+      document.getElementById('voiceStatus').innerText = voiceEnabled ? 'ON' : 'OFF';
+      if (!voiceEnabled && 'speechSynthesis' in window) {
+        window.speechSynthesis.cancel();
+      }
+    }
+
+    function scrubVideo(e) {
+      const rect = e.currentTarget.getBoundingClientRect();
+      const clickX = e.clientX - rect.left;
+      const pct = clickX / rect.width;
+      const targetIdx = Math.min(chapters.length - 1, Math.floor(pct * chapters.length));
+      playChapter(targetIdx);
+    }
+  </script>
+</body>
+</html>

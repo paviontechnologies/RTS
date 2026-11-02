@@ -1,0 +1,37 @@
+# Node dependencies
+node_modules/
+*/node_modules/
+client/node_modules/
+server/node_modules/
+
+# Production Build Outputs
+dist/
+build/
+client/dist/
+server/dist/
+
+# Environment Variables
+.env
+.env.local
+server/.env
+
+# Temporary and Log files
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# SQLite temp files
+*.db-journal
+
+# OS generated files
+.DS_Store
+Thumbs.db
+.Spotlight-V100
+.Trashes
+
+# IDE / Editor configuration
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
