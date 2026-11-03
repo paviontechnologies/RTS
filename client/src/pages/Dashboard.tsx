@@ -151,14 +151,14 @@ const SuperAdminView: React.FC<{ data: any; navigate: any; onRefresh: any }> = (
 
       {/* 8 Super Admin KPIs */}
       <Grid container spacing={2} sx={{ mb: 4 }}>
-        <KpiCard label="TOTAL SYSTEM USERS" value={sa.totalUsers || 4} subtitle="Recruiters, AMs & Sales" icon={<Users size={22} />} color="#1E3A8A" />
-        <KpiCard label="ENTERPRISE CLIENTS" value={sa.totalClients || 4} subtitle="Active MSAs & Partners" icon={<Building2 size={22} />} color="#059669" />
-        <KpiCard label="TOTAL JOB REQUISITIONS" value={sa.totalJobs || 4} subtitle="Open & Filled Reqs" icon={<Briefcase size={22} />} color="#2563EB" />
-        <KpiCard label="CANDIDATE TALENT POOL" value={sa.totalCandidates || 18} subtitle="Sourced talent records" icon={<UserCheck size={22} />} color="#7C3AED" />
-        <KpiCard label="ALL-TIME SUBMISSIONS" value={sa.totalSubmissions || 9} subtitle="Client candidate reviews" icon={<Send size={22} />} color="#EC4899" />
-        <KpiCard label="INTERVIEWS CONDUCTED" value={sa.totalInterviews || 5} subtitle="Tech & Client rounds" icon={<CalendarCheck2 size={22} />} color="#F59E0B" />
-        <KpiCard label="ACTIVE PLACEMENTS" value={sa.totalPlacements || 4} subtitle="Active billable starts" icon={<Award size={22} />} color="#10B981" />
-        <KpiCard label="REVENUE OVERVIEW" value={sa.revenueOverview || '$485,000'} subtitle="Gross billing volume" icon={<DollarSign size={22} />} color="#047857" />
+        <KpiCard label="TOTAL SYSTEM USERS" value={sa.totalUsers || 4} subtitle="Recruiters, AMs & Sales" icon={<Users size={22} />} color="#1E3A8A" onClick={() => navigate('/settings')} />
+        <KpiCard label="ENTERPRISE CLIENTS" value={sa.totalClients || 4} subtitle="Active MSAs & Partners" icon={<Building2 size={22} />} color="#059669" onClick={() => navigate('/crm/accounts')} />
+        <KpiCard label="TOTAL JOB REQUISITIONS" value={sa.totalJobs || 4} subtitle="Open & Filled Reqs" icon={<Briefcase size={22} />} color="#2563EB" onClick={() => navigate('/ats/jobs')} />
+        <KpiCard label="CANDIDATE TALENT POOL" value={sa.totalCandidates || 18} subtitle="Sourced talent records" icon={<UserCheck size={22} />} color="#7C3AED" onClick={() => navigate('/ats/candidates')} />
+        <KpiCard label="ALL-TIME SUBMISSIONS" value={sa.totalSubmissions || 9} subtitle="Client candidate reviews" icon={<Send size={22} />} color="#EC4899" onClick={() => navigate('/ats/submissions')} />
+        <KpiCard label="INTERVIEWS CONDUCTED" value={sa.totalInterviews || 5} subtitle="Tech & Client rounds" icon={<CalendarCheck2 size={22} />} color="#F59E0B" onClick={() => navigate('/ats/interviews')} />
+        <KpiCard label="ACTIVE PLACEMENTS" value={sa.totalPlacements || 4} subtitle="Active billable starts" icon={<Award size={22} />} color="#10B981" onClick={() => navigate('/ats/placements')} />
+        <KpiCard label="REVENUE OVERVIEW" value={sa.revenueOverview || '$485,000'} subtitle="Gross billing volume" icon={<DollarSign size={22} />} color="#047857" onClick={() => navigate('/reports')} />
       </Grid>
 
       {/* Analytics & Performance Grid */}
@@ -294,14 +294,14 @@ const SeniorRecruiterView: React.FC<{ data: any; navigate: any; onRefresh: any }
 
       {/* 8 Senior Recruiter KPIs */}
       <Grid container spacing={2} sx={{ mb: 4 }}>
-        <KpiCard label="ASSIGNED JOBS" value={rec.assignedJobs || 4} subtitle="Active requisitions" icon={<Briefcase size={22} />} color="#1E3A8A" />
-        <KpiCard label="OPEN POSITIONS" value={rec.openPositions || 6} subtitle="Unfilled openings" icon={<Target size={22} />} color="#2563EB" />
-        <KpiCard label="AVAILABLE CANDIDATES" value={rec.availableCandidates || 18} subtitle="Sourced & active bench" icon={<Users size={22} />} color="#059669" />
-        <KpiCard label="CANDIDATES IN PIPELINE" value={rec.candidatesInPipeline || 12} subtitle="In recruitment funnel" icon={<UserCheck size={22} />} color="#7C3AED" />
-        <KpiCard label="SUBMISSIONS" value={rec.submissions || 9} subtitle="Submitted to clients" icon={<Send size={22} />} color="#EC4899" />
-        <KpiCard label="INTERVIEWS SCHEDULED" value={rec.interviews || 5} subtitle="Tech & client rounds" icon={<CalendarCheck2 size={22} />} color="#F59E0B" />
-        <KpiCard label="OFFERS RELEASED" value={rec.offersReleased || 3} subtitle="Pending acceptance" icon={<Sparkles size={22} />} color="#10B981" />
-        <KpiCard label="CONFIRMED PLACEMENTS" value={rec.placements || 4} subtitle="Consultant starts" icon={<Award size={22} />} color="#047857" />
+        <KpiCard label="ASSIGNED JOBS" value={rec.assignedJobs || 4} subtitle="Active requisitions" icon={<Briefcase size={22} />} color="#1E3A8A" onClick={() => navigate('/ats/jobs')} />
+        <KpiCard label="OPEN POSITIONS" value={rec.openPositions || 6} subtitle="Unfilled openings" icon={<Target size={22} />} color="#2563EB" onClick={() => navigate('/ats/jobs')} />
+        <KpiCard label="AVAILABLE CANDIDATES" value={rec.availableCandidates || 18} subtitle="Sourced & active bench" icon={<Users size={22} />} color="#059669" onClick={() => navigate('/ats/candidates')} />
+        <KpiCard label="CANDIDATES IN PIPELINE" value={rec.candidatesInPipeline || 12} subtitle="In recruitment funnel" icon={<UserCheck size={22} />} color="#7C3AED" onClick={() => navigate('/ats/pipeline')} />
+        <KpiCard label="SUBMISSIONS" value={rec.submissions || 9} subtitle="Submitted to clients" icon={<Send size={22} />} color="#EC4899" onClick={() => navigate('/ats/submissions')} />
+        <KpiCard label="INTERVIEWS SCHEDULED" value={rec.interviews || 5} subtitle="Tech & client rounds" icon={<CalendarCheck2 size={22} />} color="#F59E0B" onClick={() => navigate('/ats/interviews')} />
+        <KpiCard label="OFFERS RELEASED" value={rec.offersReleased || 3} subtitle="Pending acceptance" icon={<Sparkles size={22} />} color="#10B981" onClick={() => navigate('/ats/pipeline')} />
+        <KpiCard label="CONFIRMED PLACEMENTS" value={rec.placements || 4} subtitle="Consultant starts" icon={<Award size={22} />} color="#047857" onClick={() => navigate('/ats/placements')} />
       </Grid>
 
       {/* Pipeline Funnel & Today's Interviews */}
@@ -423,12 +423,60 @@ const AccountManagerView: React.FC<{ data: any; navigate: any; onRefresh: any }>
 
       {/* 6 Account Manager KPIs */}
       <Grid container spacing={2.5} sx={{ mb: 4 }}>
-        <KpiCard label="ASSIGNED CLIENTS" value={am.assignedClients || 4} subtitle="Direct clients & MSPs" icon={<Building2 size={22} />} color="#1E3A8A" />
-        <KpiCard label="ACTIVE REQUIREMENTS" value={am.activeRequirements || 5} subtitle="Open job orders" icon={<Briefcase size={22} />} color="#2563EB" />
-        <KpiCard label="CANDIDATES SUBMITTED" value={am.candidatesSubmitted || 9} subtitle="To client hiring managers" icon={<Send size={22} />} color="#7C3AED" />
-        <KpiCard label="INTERVIEWS SCHEDULED" value={am.interviewsScheduled || 5} subtitle="Client interview rounds" icon={<CalendarCheck2 size={22} />} color="#F59E0B" />
-        <KpiCard label="CLIENT FEEDBACK PENDING" value={am.clientFeedbackPending || 2} subtitle="Awaiting manager decision" icon={<AlertTriangle size={22} />} color="#DC2626" />
-        <KpiCard label="ACTIVE PLACEMENTS" value={am.activePlacements || 4} subtitle="On-site / remote billable" icon={<Award size={22} />} color="#059669" />
+        <KpiCard
+          label="ASSIGNED CLIENTS"
+          value={am.assignedClients || 4}
+          subtitle="Direct clients & MSPs"
+          icon={<Building2 size={22} />}
+          color="#1E3A8A"
+          md={4}
+          onClick={() => navigate('/crm/accounts')}
+        />
+        <KpiCard
+          label="ACTIVE REQUIREMENTS"
+          value={am.activeRequirements || 5}
+          subtitle="Open job orders"
+          icon={<Briefcase size={22} />}
+          color="#2563EB"
+          md={4}
+          onClick={() => navigate('/ats/jobs')}
+        />
+        <KpiCard
+          label="CANDIDATES SUBMITTED"
+          value={am.candidatesSubmitted || 9}
+          subtitle="To client hiring managers"
+          icon={<Send size={22} />}
+          color="#7C3AED"
+          md={4}
+          onClick={() => navigate('/ats/submissions')}
+        />
+        <KpiCard
+          label="INTERVIEWS SCHEDULED"
+          value={am.interviewsScheduled || 5}
+          subtitle="Client interview rounds"
+          icon={<CalendarCheck2 size={22} />}
+          color="#F59E0B"
+          md={4}
+          onClick={() => navigate('/ats/interviews')}
+        />
+        <KpiCard
+          label="CLIENT FEEDBACK PENDING"
+          value={am.clientFeedbackPending || 2}
+          subtitle="Awaiting manager decision"
+          icon={<AlertTriangle size={22} />}
+          color="#DC2626"
+          md={4}
+          onClick={() => navigate('/ats/client-feedback')}
+        />
+        <KpiCard
+          label="ACTIVE PLACEMENTS"
+          value={am.activePlacements || 4}
+          subtitle="On-site / remote billable"
+          icon={<Award size={22} />}
+          color="#059669"
+          md={4}
+          onClick={() => navigate('/ats/placements')}
+        />
       </Grid>
 
       {/* Client Accounts & Feedback Logs */}
@@ -458,7 +506,12 @@ const AccountManagerView: React.FC<{ data: any; navigate: any; onRefresh: any }>
                 </TableHead>
                 <TableBody>
                   {am.clientAccounts?.map((acc: any) => (
-                    <TableRow key={acc.id} hover>
+                    <TableRow
+                      key={acc.id}
+                      hover
+                      sx={{ cursor: 'pointer' }}
+                      onClick={() => navigate('/crm/accounts')}
+                    >
                       <TableCell sx={{ fontWeight: 700 }}>{acc.name}</TableCell>
                       <TableCell><Chip label={acc.accountType || 'DirectClient'} size="small" variant="outlined" /></TableCell>
                       <TableCell align="center"><strong>{acc._count?.jobs || 1}</strong></TableCell>
@@ -534,13 +587,13 @@ const SalesBdeView: React.FC<{ data: any; navigate: any; onRefresh: any }> = ({ 
 
       {/* 7 Sales KPIs */}
       <Grid container spacing={2} sx={{ mb: 4 }}>
-        <KpiCard label="TOTAL PROSPECT LEADS" value={s.totalLeads || 14} subtitle="All inbound & outbound" icon={<Users size={22} />} color="#1E3A8A" />
-        <KpiCard label="NEW INQUIRIES" value={s.newLeads || 6} subtitle="Uncontacted leads" icon={<Sparkles size={22} />} color="#2563EB" />
-        <KpiCard label="QUALIFIED LEADS" value={s.qualifiedLeads || 5} subtitle="Ready for MSA" icon={<CheckCircle2 size={22} />} color="#059669" />
-        <KpiCard label="DISCOVERY MEETINGS" value={s.meetings || 4} subtitle="Scheduled client demos" icon={<CalendarCheck2 size={22} />} color="#F59E0B" />
-        <KpiCard label="OPEN OPPORTUNITIES" value={s.openOpportunities || 3} subtitle="In negotiation" icon={<TrendingUp size={22} />} color="#7C3AED" />
-        <KpiCard label="PIPELINE VALUE" value={`$${((s.pipelineValue || 380000) / 1000).toFixed(0)}k`} subtitle="Estimated deal volume" icon={<DollarSign size={22} />} color="#047857" />
-        <KpiCard label="DEALS CLOSED WON" value={s.dealsWon || 4} subtitle="Converted client accounts" icon={<Award size={22} />} color="#10B981" />
+        <KpiCard label="TOTAL PROSPECT LEADS" value={s.totalLeads || 14} subtitle="All inbound & outbound" icon={<Users size={22} />} color="#1E3A8A" onClick={() => navigate('/crm/leads')} />
+        <KpiCard label="NEW INQUIRIES" value={s.newLeads || 6} subtitle="Uncontacted leads" icon={<Sparkles size={22} />} color="#2563EB" onClick={() => navigate('/crm/leads')} />
+        <KpiCard label="QUALIFIED LEADS" value={s.qualifiedLeads || 5} subtitle="Ready for MSA" icon={<CheckCircle2 size={22} />} color="#059669" onClick={() => navigate('/crm/leads')} />
+        <KpiCard label="DISCOVERY MEETINGS" value={s.meetings || 4} subtitle="Scheduled client demos" icon={<CalendarCheck2 size={22} />} color="#F59E0B" onClick={() => navigate('/crm/activities')} />
+        <KpiCard label="OPEN OPPORTUNITIES" value={s.openOpportunities || 3} subtitle="In negotiation" icon={<TrendingUp size={22} />} color="#7C3AED" onClick={() => navigate('/crm/opportunities')} />
+        <KpiCard label="PIPELINE VALUE" value={`$${((s.pipelineValue || 380000) / 1000).toFixed(0)}k`} subtitle="Estimated deal volume" icon={<DollarSign size={22} />} color="#047857" onClick={() => navigate('/crm/opportunities')} />
+        <KpiCard label="DEALS CLOSED WON" value={s.dealsWon || 4} subtitle="Converted client accounts" icon={<Award size={22} />} color="#10B981" onClick={() => navigate('/crm/opportunities')} />
       </Grid>
 
       {/* Quota & Pipeline Section */}
@@ -603,20 +656,89 @@ const SalesBdeView: React.FC<{ data: any; navigate: any; onRefresh: any }> = ({ 
 /* =========================================================================
    REUSABLE KPI CARD
    ========================================================================= */
-const KpiCard: React.FC<{ label: string; value: string | number; subtitle: string; icon: React.ReactNode; color: string }> = ({
+interface KpiCardProps {
+  label: string;
+  value: string | number;
+  subtitle: string;
+  icon: React.ReactNode;
+  color: string;
+  onClick?: () => void;
+  xs?: number;
+  sm?: number;
+  md?: number;
+  lg?: number;
+}
+
+const KpiCard: React.FC<KpiCardProps> = ({
   label,
   value,
   subtitle,
   icon,
   color,
+  onClick,
+  xs = 12,
+  sm = 6,
+  md = 3,
+  lg,
 }) => (
-  <Grid item xs={12} sm={6} md={3}>
-    <Card sx={{ bgcolor: '#FFFFFF', position: 'relative', overflow: 'hidden', height: '100%', border: '1px solid #E2E8F0', borderRadius: 2.5 }}>
+  <Grid item xs={xs} sm={sm} md={md} lg={lg || md}>
+    <Card
+      onClick={onClick}
+      role={onClick ? 'button' : undefined}
+      tabIndex={onClick ? 0 : undefined}
+      onKeyDown={(e) => {
+        if (onClick && (e.key === 'Enter' || e.key === ' ')) {
+          e.preventDefault();
+          onClick();
+        }
+      }}
+      sx={{
+        bgcolor: '#FFFFFF',
+        position: 'relative',
+        overflow: 'hidden',
+        height: '100%',
+        border: '1px solid #E2E8F0',
+        borderRadius: 2.5,
+        cursor: onClick ? 'pointer' : 'default',
+        transition: 'all 0.2s cubic-bezier(0.4, 0, 0.2, 1)',
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'space-between',
+        '&:hover': onClick
+          ? {
+              transform: 'translateY(-4px)',
+              boxShadow: '0 12px 24px -4px rgba(0, 0, 0, 0.1), 0 6px 12px -4px rgba(0, 0, 0, 0.06)',
+              borderColor: color,
+              '& .kpi-arrow': {
+                color: color,
+                transform: 'translateX(2px)',
+              },
+            }
+          : {},
+        '&:active': onClick
+          ? {
+              transform: 'translateY(-1px)',
+            }
+          : {},
+      }}
+    >
       <Box sx={{ height: 4, bgcolor: color }} />
-      <CardContent sx={{ p: 2.5 }}>
+      <CardContent sx={{ p: 2.5, pb: '18px !important', flexGrow: 1, display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
         <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
-          <Box sx={{ overflow: 'hidden' }}>
-            <Typography variant="caption" sx={{ fontWeight: 800, color: '#64748B', letterSpacing: '0.04em', display: 'block', whiteSpace: 'nowrap', textOverflow: 'ellipsis', overflow: 'hidden' }}>
+          <Box sx={{ overflow: 'hidden', pr: 1 }}>
+            <Typography
+              variant="caption"
+              sx={{
+                fontWeight: 800,
+                color: '#64748B',
+                letterSpacing: '0.04em',
+                display: 'block',
+                lineHeight: 1.3,
+                whiteSpace: 'nowrap',
+                textOverflow: 'ellipsis',
+                overflow: 'hidden',
+              }}
+            >
               {label}
             </Typography>
             <Typography variant="h4" sx={{ fontWeight: 800, color: '#0F172A', mt: 0.5 }}>
@@ -627,9 +749,28 @@ const KpiCard: React.FC<{ label: string; value: string | number; subtitle: strin
             {icon}
           </Avatar>
         </Box>
-        <Typography variant="caption" sx={{ color: '#64748B', fontWeight: 600, display: 'block', mt: 1 }}>
-          {subtitle}
-        </Typography>
+
+        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mt: 2, pt: 1, borderTop: '1px solid #F1F5F9' }}>
+          <Typography variant="caption" sx={{ color: '#64748B', fontWeight: 600 }}>
+            {subtitle}
+          </Typography>
+          {onClick && (
+            <Box
+              className="kpi-arrow"
+              sx={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: 0.3,
+                color: '#94A3B8',
+                fontWeight: 700,
+                fontSize: '0.75rem',
+                transition: 'all 0.2s ease',
+              }}
+            >
+              Open <ArrowUpRight size={13} />
+            </Box>
+          )}
+        </Box>
       </CardContent>
     </Card>
   </Grid>
