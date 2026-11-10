@@ -66,7 +66,7 @@ const handleWelcome = (req: Request, res: Response) => {
             <h1>Pavion Technologies Platform</h1>
             <p>You have accessed the backend REST API server. To view and use the full recruitment and CRM platform, open the Web UI:</p>
             <div class="btn-group">
-              <a href="http://localhost:5173" class="btn btn-primary">🚀 Open Web Application (Port 5173)</a>
+              <a href="http://localhost:3003" class="btn btn-primary">🚀 Open Web Application (Port 3003)</a>
               <a href="/api-docs" class="btn btn-secondary">📑 Open Swagger Documentation</a>
             </div>
             <div class="endpoints">
@@ -86,7 +86,7 @@ const handleWelcome = (req: Request, res: Response) => {
     status: 'online',
     product: 'Pavion Technologies - US Staffing ATS + CRM Platform',
     version: '1.0.0',
-    webAppUrl: 'http://localhost:5173',
+    webAppUrl: 'http://localhost:3003',
     swaggerDocsUrl: '/api-docs',
     endpoints: {
       health: '/api/v1/health',
