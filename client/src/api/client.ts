@@ -139,6 +139,76 @@ export const apiClient = {
     markAsRead: (id: string) => api.patch(`/notifications/${id}/read`),
     markAllAsRead: () => api.post('/notifications/mark-all-read'),
   },
+
+  // 1. Talent Pools & Sourcing
+  talentPools: {
+    getTalentPools: (params?: any) => api.get('/talent-pools', { params }),
+    createTalentPool: (data: any) => api.post('/talent-pools', data),
+    getTalentPoolById: (id: string) => api.get(`/talent-pools/${id}`),
+    addMember: (id: string, data: any) => api.post(`/talent-pools/${id}/members`, data),
+    removeMember: (id: string, candidateId: string) => api.delete(`/talent-pools/${id}/members/${candidateId}`),
+    matchJobs: (id: string) => api.get(`/talent-pools/${id}/match-jobs`),
+  },
+
+  // 2. Candidate Screening & Killer Questions
+  screening: {
+    getScreenings: (params?: any) => api.get('/screening/assessments', { params }),
+    createScreening: (data: any) => api.post('/screening/assessments', data),
+    updateScreening: (id: string, data: any) => api.patch(`/screening/assessments/${id}`, data),
+  },
+
+  // 3. Interview Kits & Scorecards
+  interviewKits: {
+    getInterviewKits: () => api.get('/interview-kits'),
+    createInterviewKit: (data: any) => api.post('/interview-kits', data),
+    getScorecards: (params?: any) => api.get('/interview-kits/scorecards', { params }),
+    submitScorecard: (data: any) => api.post('/interview-kits/scorecards', data),
+  },
+
+  // 4. Offer Management & Spread Calculator
+  offers: {
+    getOffers: (params?: any) => api.get('/offers', { params }),
+    createOffer: (data: any) => api.post('/offers', data),
+    updateOfferStatus: (id: string, data: any) => api.patch(`/offers/${id}/status`, data),
+  },
+
+  // 5. Candidate Onboarding & Verification
+  onboarding: {
+    getOnboardingTasks: (params?: any) => api.get('/onboarding/tasks', { params }),
+    createOnboardingTask: (data: any) => api.post('/onboarding/tasks', data),
+    verifyOnboardingTask: (id: string, data: any) => api.patch(`/onboarding/tasks/${id}/verify`, data),
+  },
+
+  // 6. Credential & Compliance Management
+  compliance: {
+    getCredentials: (params?: any) => api.get('/compliance/credentials', { params }),
+    createCredential: (data: any) => api.post('/compliance/credentials', data),
+    verifyCredential: (id: string, data: any) => api.patch(`/compliance/credentials/${id}/verify`, data),
+    getComplianceAlerts: () => api.get('/compliance/alerts'),
+  },
+
+  // 7. Candidate Communication & Engagement
+  communications: {
+    getLogs: (params?: any) => api.get('/communications/logs', { params }),
+    sendMessage: (data: any) => api.post('/communications/send', data),
+    getTemplates: () => api.get('/communications/templates'),
+    createTemplate: (data: any) => api.post('/communications/templates', data),
+  },
+
+  // 8. Consultant Redeployment & Bench Management
+  redeployment: {
+    getForecast: () => api.get('/redeployment/forecast'),
+    extendContract: (data: any) => api.post('/redeployment/extend-contract', data),
+  },
+
+  // 9. Vendor / MSP / VMS Management
+  vendors: {
+    getVendors: (params?: any) => api.get('/vendors', { params }),
+    createVendor: (data: any) => api.post('/vendors', data),
+    getVendorSubmissions: (params?: any) => api.get('/vendors/submissions', { params }),
+    createVendorSubmission: (data: any) => api.post('/vendors/submissions', data),
+    updateVendorSubmissionStatus: (id: string, data: any) => api.patch(`/vendors/submissions/${id}/status`, data),
+  },
 };
 
 export default api;

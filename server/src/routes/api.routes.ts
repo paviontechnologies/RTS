@@ -14,6 +14,7 @@ import { DashboardController } from '../controllers/dashboard.controller';
 import { SettingsController } from '../controllers/settings.controller';
 import { IntegrationController } from '../controllers/integration.controller';
 import { NotificationController } from '../controllers/notification.controller';
+import { EnterpriseAtsController } from '../controllers/enterpriseAts.controller';
 import { authMiddleware } from '../middleware/auth.middleware';
 
 const router = Router();
@@ -137,5 +138,61 @@ router.post('/integrations/simulate-candidate', IntegrationController.simulateCa
 router.get('/notifications', NotificationController.getNotifications);
 router.patch('/notifications/:id/read', NotificationController.markAsRead);
 router.post('/notifications/mark-all-read', NotificationController.markAllAsRead);
+
+// =========================================================================
+// ENTERPRISE ATS EXTENSION MODULE ROUTES (9 MODULES)
+// =========================================================================
+
+// 1. Talent Pools & Sourcing
+router.get('/talent-pools', EnterpriseAtsController.getTalentPools);
+router.post('/talent-pools', EnterpriseAtsController.createTalentPool);
+router.get('/talent-pools/:id', EnterpriseAtsController.getTalentPoolById);
+router.post('/talent-pools/:id/members', EnterpriseAtsController.addMemberToPool);
+router.delete('/talent-pools/:id/members/:candidateId', EnterpriseAtsController.removeMemberFromPool);
+router.get('/talent-pools/:id/match-jobs', EnterpriseAtsController.matchJobsForPool);
+
+// 2. Candidate Screening & Killer Questions
+router.get('/screening/assessments', EnterpriseAtsController.getScreenings);
+router.post('/screening/assessments', EnterpriseAtsController.createScreening);
+router.patch('/screening/assessments/:id', EnterpriseAtsController.updateScreening);
+
+// 3. Interview Kits & Scorecards
+router.get('/interview-kits', EnterpriseAtsController.getInterviewKits);
+router.post('/interview-kits', EnterpriseAtsController.createInterviewKit);
+router.get('/interview-kits/scorecards', EnterpriseAtsController.getScorecards);
+router.post('/interview-kits/scorecards', EnterpriseAtsController.submitScorecard);
+
+// 4. Offer Management & Spread Calculator
+router.get('/offers', EnterpriseAtsController.getOffers);
+router.post('/offers', EnterpriseAtsController.createOffer);
+router.patch('/offers/:id/status', EnterpriseAtsController.updateOfferStatus);
+
+// 5. Candidate Onboarding & Verification
+router.get('/onboarding/tasks', EnterpriseAtsController.getOnboardingTasks);
+router.post('/onboarding/tasks', EnterpriseAtsController.createOnboardingTask);
+router.patch('/onboarding/tasks/:id/verify', EnterpriseAtsController.verifyOnboardingTask);
+
+// 6. Credential & Compliance Management
+router.get('/compliance/credentials', EnterpriseAtsController.getCredentials);
+router.post('/compliance/credentials', EnterpriseAtsController.createCredential);
+router.patch('/compliance/credentials/:id/verify', EnterpriseAtsController.verifyCredential);
+router.get('/compliance/alerts', EnterpriseAtsController.getComplianceAlerts);
+
+// 7. Candidate Communication & Engagement
+router.get('/communications/logs', EnterpriseAtsController.getCommunicationLogs);
+router.post('/communications/send', EnterpriseAtsController.sendCommunication);
+router.get('/communications/templates', EnterpriseAtsController.getMessageTemplates);
+router.post('/communications/templates', EnterpriseAtsController.createMessageTemplate);
+
+// 8. Consultant Redeployment & Bench Management
+router.get('/redeployment/forecast', EnterpriseAtsController.getRedeploymentForecast);
+router.post('/redeployment/extend-contract', EnterpriseAtsController.extendContract);
+
+// 9. Vendor / MSP / VMS Management
+router.get('/vendors', EnterpriseAtsController.getVendors);
+router.post('/vendors', EnterpriseAtsController.createVendor);
+router.get('/vendors/submissions', EnterpriseAtsController.getVendorSubmissions);
+router.post('/vendors/submissions', EnterpriseAtsController.createVendorSubmission);
+router.patch('/vendors/submissions/:id/status', EnterpriseAtsController.updateVendorSubmissionStatus);
 
 export default router;

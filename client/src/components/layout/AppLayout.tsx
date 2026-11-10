@@ -51,6 +51,10 @@ import {
   Shield,
   ShieldCheck,
   Sparkles,
+  BookOpen,
+  DollarSign,
+  FileCheck,
+  RotateCcw,
 } from 'lucide-react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { apiClient } from '../../api/client';
@@ -82,11 +86,21 @@ const getNavSectionsForRole = (role: string): NavSection[] => {
         items: [
           { label: 'Jobs', path: '/ats/jobs', icon: <Briefcase size={19} />, badge: '4' },
           { label: 'Candidates', path: '/ats/candidates', icon: <UserCheck size={19} /> },
+          { label: 'Talent Pools', path: '/ats/talent-pools', icon: <Sparkles size={19} /> },
           { label: 'Resume Management', path: '/ats/resumes', icon: <FileText size={19} /> },
           { label: 'Recruitment Pipeline', path: '/ats/pipeline', icon: <GitBranch size={19} /> },
           { label: 'Submissions', path: '/ats/submissions', icon: <Send size={19} /> },
           { label: 'Interviews', path: '/ats/interviews', icon: <CalendarCheck2 size={19} /> },
           { label: 'Placements', path: '/ats/placements', icon: <Award size={19} /> },
+        ],
+      },
+      {
+        header: 'EVALUATION & OPERATIONS',
+        items: [
+          { label: 'Screening & Assessments', path: '/ats/screening', icon: <FileCheck size={19} /> },
+          { label: 'Interview Kits', path: '/ats/interview-kits', icon: <BookOpen size={19} /> },
+          { label: 'Offer Management', path: '/ats/offers', icon: <DollarSign size={19} /> },
+          { label: 'Communications', path: '/ats/communications', icon: <MessageSquare size={19} /> },
         ],
       },
       {
@@ -116,6 +130,15 @@ const getNavSectionsForRole = (role: string): NavSection[] => {
           { label: 'Interviews', path: '/ats/interviews', icon: <CalendarCheck2 size={19} /> },
           { label: 'Client Feedback', path: '/ats/client-feedback', icon: <MessageSquare size={19} /> },
           { label: 'Placements', path: '/ats/placements', icon: <Award size={19} /> },
+        ],
+      },
+      {
+        header: 'OPERATIONS & REDEPLOYMENT',
+        items: [
+          { label: 'Offer Management', path: '/ats/offers', icon: <DollarSign size={19} /> },
+          { label: 'Onboarding & Clearance', path: '/ats/onboarding', icon: <ShieldCheck size={19} /> },
+          { label: 'Consultant Redeployment', path: '/ats/redeployment', icon: <RotateCcw size={19} /> },
+          { label: 'Vendors & Subcontractors', path: '/ats/vendors', icon: <Building2 size={19} /> },
         ],
       },
     ];
@@ -170,6 +193,20 @@ const getNavSectionsForRole = (role: string): NavSection[] => {
         { label: 'Submissions', path: '/ats/submissions', icon: <Send size={19} /> },
         { label: 'Interviews', path: '/ats/interviews', icon: <CalendarCheck2 size={19} /> },
         { label: 'Placements', path: '/ats/placements', icon: <Award size={19} /> },
+      ],
+    },
+    {
+      header: 'ENTERPRISE ATS & OPERATIONS',
+      items: [
+        { label: 'Talent Pools', path: '/ats/talent-pools', icon: <Sparkles size={19} /> },
+        { label: 'Screening & Assessments', path: '/ats/screening', icon: <FileCheck size={19} /> },
+        { label: 'Interview Kits', path: '/ats/interview-kits', icon: <BookOpen size={19} /> },
+        { label: 'Offer Management', path: '/ats/offers', icon: <DollarSign size={19} /> },
+        { label: 'Onboarding & Clearance', path: '/ats/onboarding', icon: <ShieldCheck size={19} /> },
+        { label: 'Compliance & Visas', path: '/ats/compliance', icon: <Shield size={19} /> },
+        { label: 'Communications', path: '/ats/communications', icon: <MessageSquare size={19} /> },
+        { label: 'Consultant Redeployment', path: '/ats/redeployment', icon: <RotateCcw size={19} /> },
+        { label: 'Vendors & Subcontractors', path: '/ats/vendors', icon: <Building2 size={19} /> },
       ],
     },
     {

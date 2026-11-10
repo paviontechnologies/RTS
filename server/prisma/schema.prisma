@@ -41,6 +41,19 @@ model Organization {
   tasks           Task[]
   notifications   Notification[]
   auditLogs       AuditLog[]
+
+  // Enterprise ATS Relations
+  talentPools          TalentPool[]
+  screeningAssessments ScreeningAssessment[]
+  interviewKits        InterviewKit[]
+  interviewScorecards  InterviewScorecard[]
+  offers               Offer[]
+  onboardingTasks      OnboardingTask[]
+  candidateCredentials CandidateCredential[]
+  communicationLogs    CommunicationLog[]
+  messageTemplates     MessageTemplate[]
+  vendors              Vendor[]
+  vendorSubmissions    VendorSubmission[]
 }
 
 model Role {
@@ -253,6 +266,9 @@ model JobRequisition {
   submissions         Submission[]
   interviews          Interview[]
   placements          Placement[]
+  screeningAssessments ScreeningAssessment[]
+  offers              Offer[]
+  vendorSubmissions   VendorSubmission[]
 
   @@unique([organizationId, jobCode])
 }
@@ -306,6 +322,12 @@ model Candidate {
   rtrRecords          RTRRecord[]
   interviews          Interview[]
   placements          Placement[]
+  talentPoolMembers   TalentPoolMember[]
+  screeningAssessments ScreeningAssessment[]
+  credentials         CandidateCredential[]
+  communicationLogs   CommunicationLog[]
+  offers              Offer[]
+  onboardingTasks     OnboardingTask[]
 }
 
 model CandidateDocument {
@@ -420,6 +442,7 @@ model Submission {
   resumeDocument      CandidateDocument? @relation(fields: [resumeDocumentId], references: [id])
   interviews          Interview[]
   placements          Placement[]
+  offers              Offer[]
 }
 
 model Interview {
@@ -489,6 +512,7 @@ model Placement {
   job                     JobRequisition @relation(fields: [jobId], references: [id], onDelete: Cascade)
   clientAccount           Account      @relation(fields: [clientAccountId], references: [id], onDelete: Cascade)
   recruiter               User?        @relation("PlacementRecruiter", fields: [recruiterId], references: [id])
+  onboardingTasks         OnboardingTask[]
 }
 
 model Activity {
@@ -560,4 +584,268 @@ model AuditLog {
   createdAt           DateTime     @default(now())
 
   organization        Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+}
+
+// ============================================================================
+// ENTERPRISE ATS EXTENSION MODELS (BULLHORN / GREENHOUSE / JOBDIVA PARITY)
+// ============================================================================
+
+model TalentPool {
+  id              String             @id @default(uuid())
+  organizationId  String
+  name            String
+  description     String?
+  category        String             @default("General") // e.g. Java/AWS Bench, DevOps, Salesforce, Healthcare
+  tags            String?            // JSON array e.g. ["Java", "AWS", "Spring Boot"]
+  targetSkills    String?            // comma-separated or JSON
+  status          String             @default("Active")
+  createdAt       DateTime           @default(now())
+  updatedAt       DateTime           @updatedAt
+
+  organization    Organization       @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  members         TalentPoolMember[]
+}
+
+model TalentPoolMember {
+  id           String     @id @default(uuid())
+  talentPoolId String
+  candidateId  String
+  addedById    String?
+  notes        String?
+  status       String     @default("Active") // Active, Contacted, Placed, Archived
+  addedAt      DateTime   @default(now())
+
+  talentPool   TalentPool @relation(fields: [talentPoolId], references: [id], onDelete: Cascade)
+  candidate    Candidate  @relation(fields: [candidateId], references: [id], onDelete: Cascade)
+
+  @@unique([talentPoolId, candidateId])
+}
+
+model ScreeningAssessment {
+  id                    String          @id @default(uuid())
+  organizationId        String
+  candidateId           String
+  jobId                 String?
+  recruiterId           String?
+  title                 String          @default("Recruiter Phone Screening")
+  status                String          @default("Completed") // Pending, InProgress, Completed, Passed, Failed
+  overallScore          Float?          @default(80)
+  recommendation        String          @default("Proceed") // Proceed, OnHold, Reject
+  workAuthVerified      Boolean         @default(true)
+  availabilityConfirmed String?         @default("Immediate")
+  rateConfirmed         Float?
+  notes                 String?
+  questionsJson         String?         // JSON array of killer questions & answers
+  conductedAt           DateTime        @default(now())
+  createdAt             DateTime        @default(now())
+  updatedAt             DateTime        @updatedAt
+
+  organization          Organization    @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  candidate             Candidate       @relation(fields: [candidateId], references: [id], onDelete: Cascade)
+  job                   JobRequisition? @relation(fields: [jobId], references: [id], onDelete: SetNull)
+}
+
+model InterviewKit {
+  id              String               @id @default(uuid())
+  organizationId  String
+  title           String               // e.g. "Senior React Developer - Technical Round 1"
+  jobRole         String               // e.g. "Frontend Engineer"
+  roundType       String               @default("Technical") // Technical, SystemDesign, Behavioral, Executive
+  competencies    String?              // JSON array of evaluated areas e.g. ["Coding", "Architecture", "Communication"]
+  questionsJson   String?              // JSON array of questions, guidance, and expected answers
+  status          String               @default("Active")
+  createdAt       DateTime             @default(now())
+  updatedAt       DateTime             @updatedAt
+
+  organization    Organization         @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  scorecards      InterviewScorecard[]
+}
+
+model InterviewScorecard {
+  id                  String        @id @default(uuid())
+  organizationId      String
+  interviewId         String?
+  interviewKitId      String?
+  candidateId         String
+  interviewerName     String
+  interviewerEmail    String?
+  overallRating       Int           @default(4) // 1 to 5
+  recommendation      String        @default("Hire") // StrongHire, Hire, Neutral, NoHire, StrongNoHire
+  strengths           String?
+  weaknesses          String?
+  ratingsJson         String?       // JSON { "React Architecture": 4, "System Design": 5, "Coding": 4 }
+  notes               String?
+  submittedAt         DateTime      @default(now())
+  createdAt           DateTime      @default(now())
+
+  organization        Organization  @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  interviewKit        InterviewKit? @relation(fields: [interviewKitId], references: [id], onDelete: SetNull)
+}
+
+model Offer {
+  id                  String         @id @default(uuid())
+  organizationId      String
+  candidateId         String
+  jobId               String
+  submissionId        String?
+  clientAccountId     String?
+  offerCode           String         @default("OFF-1001")
+  payRate             Float
+  billRate            Float
+  overtimeRate        Float?
+  marginPercentage    Float?
+  spreadHourly        Float?
+  employmentType      String         @default("Contract - W2") // Contract - C2C, Contract - W2, 1099, FullTime
+  startDate           DateTime
+  endDate             DateTime?
+  benefitsDetails     String?        // Health, 401k, PTO
+  status              String         @default("Draft") // Draft, PendingApproval, Approved, Sent, Accepted, Rejected, Expired
+  approvalLevel       String         @default("Approved") // PendingDirector, Approved
+  approvedById        String?
+  offerLetterContent  String?        // HTML/Text content of generated letter
+  sentAt              DateTime?
+  acceptedAt          DateTime?
+  expiresAt           DateTime?
+  notes               String?
+  createdAt           DateTime       @default(now())
+  updatedAt           DateTime       @updatedAt
+
+  organization        Organization   @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  candidate           Candidate      @relation(fields: [candidateId], references: [id], onDelete: Cascade)
+  job                 JobRequisition @relation(fields: [jobId], references: [id], onDelete: Cascade)
+  submission          Submission?    @relation(fields: [submissionId], references: [id], onDelete: SetNull)
+}
+
+model OnboardingTask {
+  id                String       @id @default(uuid())
+  organizationId    String
+  placementId       String?
+  candidateId       String
+  category          String       @default("Document") // Document, BGV, I9_EVerify, Equipment, Payroll, DrugTest
+  title             String
+  description       String?
+  status            String       @default("Pending") // Pending, Submitted, Verified, Rejected
+  documentUrl       String?
+  verificationNotes String?
+  dueDate           DateTime?
+  verifiedAt        DateTime?
+  createdAt         DateTime     @default(now())
+  updatedAt         DateTime     @updatedAt
+
+  organization      Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  placement         Placement?   @relation(fields: [placementId], references: [id], onDelete: SetNull)
+  candidate         Candidate    @relation(fields: [candidateId], references: [id], onDelete: Cascade)
+}
+
+model CandidateCredential {
+  id                 String       @id @default(uuid())
+  organizationId     String
+  candidateId        String
+  credentialType     String       @default("Certification") // Certification, License, Degree, Immunization, BackgroundClearance
+  name               String       // e.g. "AWS Certified Solutions Architect" or "Registered Nurse (RN) License"
+  issuingAuthority   String?      // e.g. "Amazon Web Services", "New York State Board of Nursing"
+  credentialIdNumber String?
+  state              String?      // for state-specific licenses
+  issueDate          DateTime?
+  expiryDate         DateTime?
+  verificationStatus String       @default("Verified") // Pending, Verified, Expired, Revoked
+  documentUrl        String?
+  notes              String?
+  createdAt          DateTime     @default(now())
+  updatedAt          DateTime     @updatedAt
+
+  organization       Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  candidate          Candidate    @relation(fields: [candidateId], references: [id], onDelete: Cascade)
+}
+
+model CommunicationLog {
+  id              String       @id @default(uuid())
+  organizationId  String
+  candidateId     String
+  channel         String       @default("Email") // Email, SMS, WhatsApp, PhoneCall
+  direction       String       @default("Outbound") // Inbound, Outbound
+  subject         String?
+  body            String
+  templateName    String?
+  status          String       @default("Sent") // Sent, Delivered, Failed, Replied
+  sentBy          String?      // Name or email of recruiter
+  occurredAt      DateTime     @default(now())
+  createdAt       DateTime     @default(now())
+
+  organization    Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  candidate       Candidate    @relation(fields: [candidateId], references: [id], onDelete: Cascade)
+}
+
+model MessageTemplate {
+  id              String       @id @default(uuid())
+  organizationId  String
+  name            String       // e.g. "Client Interview Invitation"
+  category        String       @default("Interview") // Interview, Screening, Offer, Rejection, JobAlert, RTR
+  channel         String       @default("Email") // Email, SMS, WhatsApp
+  subject         String?
+  body            String       // with {{candidateName}}, {{jobTitle}}, etc.
+  variablesJson   String?      // JSON array of available merge tags
+  createdAt       DateTime     @default(now())
+  updatedAt       DateTime     @updatedAt
+
+  organization    Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+}
+
+model Vendor {
+  id              String             @id @default(uuid())
+  organizationId  String
+  name            String
+  vendorType      String             @default("C2C_Subcontractor") // C2C_Subcontractor, Staffing_Agency, MSP_Partner, Prime_Vendor
+  tier            String             @default("Tier1") // Tier1, Tier2, Preferred
+  contactPerson   String?
+  email           String
+  phone           String?
+  website         String?
+  taxIdEin        String?
+  msaStatus       String             @default("Active") // Active, Pending, Expired
+  paymentTerms    String             @default("Net 45")
+  status          String             @default("Active") // Active, Inactive, Blocked
+  rating          Int?               @default(5)
+  notes           String?
+  createdAt       DateTime           @default(now())
+  updatedAt       DateTime           @updatedAt
+
+  organization    Organization       @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  contacts        VendorContact[]
+  submissions     VendorSubmission[]
+}
+
+model VendorContact {
+  id          String   @id @default(uuid())
+  vendorId    String
+  firstName   String
+  lastName    String
+  designation String?  // e.g. "Senior Account Executive"
+  email       String
+  phone       String?
+  isPrimary   Boolean  @default(false)
+  createdAt   DateTime @default(now())
+
+  vendor      Vendor   @relation(fields: [vendorId], references: [id], onDelete: Cascade)
+}
+
+model VendorSubmission {
+  id              String         @id @default(uuid())
+  organizationId  String
+  vendorId        String
+  jobId           String
+  candidateName   String
+  candidateEmail  String?
+  candidatePhone  String?
+  submittedRate   Float
+  currency        String         @default("USD")
+  resumeUrl       String?
+  status          String         @default("Submitted") // Submitted, UnderReview, ClientInterview, Placed, Rejected
+  notes           String?
+  createdAt       DateTime       @default(now())
+  updatedAt       DateTime       @updatedAt
+
+  organization    Organization   @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  vendor          Vendor         @relation(fields: [vendorId], references: [id], onDelete: Cascade)
+  job             JobRequisition @relation(fields: [jobId], references: [id], onDelete: Cascade)
 }

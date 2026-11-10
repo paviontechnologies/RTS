@@ -27,6 +27,17 @@ import { RecruiterCoordination } from './pages/ats/RecruiterCoordination';
 import { ClientFeedback } from './pages/ats/ClientFeedback';
 import { Activities } from './pages/crm/Activities';
 
+// 9 Enterprise Recruitment Operations & ATS Modules
+import { TalentPools } from './pages/ats/TalentPools';
+import { Screening } from './pages/ats/Screening';
+import { InterviewKits } from './pages/ats/InterviewKits';
+import { Offers } from './pages/ats/Offers';
+import { Onboarding } from './pages/ats/Onboarding';
+import { Compliance } from './pages/ats/Compliance';
+import { Communications } from './pages/ats/Communications';
+import { Redeployment } from './pages/ats/Redeployment';
+import { Vendors } from './pages/ats/Vendors';
+
 // Protected route wrapper
 const ProtectedRoute: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const token = localStorage.getItem('pavion_token');
@@ -71,6 +82,17 @@ export const App: React.FC = () => {
                   <Route path="/ats/client-feedback" element={<ClientFeedback />} />
                   <Route path="/ats/coordination" element={<RecruiterCoordination />} />
                   <Route path="/ats/placements" element={<Placements />} />
+
+                  {/* Enterprise ATS & Operations Modules */}
+                  <Route path="/ats/talent-pools" element={<TalentPools />} />
+                  <Route path="/ats/screening" element={<Screening />} />
+                  <Route path="/ats/interview-kits" element={<InterviewKits />} />
+                  <Route path="/ats/offers" element={<Offers />} />
+                  <Route path="/ats/onboarding" element={<Onboarding />} />
+                  <Route path="/ats/compliance" element={<Compliance />} />
+                  <Route path="/ats/communications" element={<Communications />} />
+                  <Route path="/ats/redeployment" element={<Redeployment />} />
+                  <Route path="/ats/vendors" element={<Vendors />} />
 
                   {/* Productivity & Admin Routes */}
                   <Route path="/tasks" element={<Tasks />} />
