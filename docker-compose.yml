@@ -1,0 +1,124 @@
+version: '3.8'
+
+services:
+  # ===========================================================================
+  # 1. DATABASE: PostgreSQL 16 with Multi-Schema & Extensions
+  # ===========================================================================
+  postgres:
+    image: postgres:16-alpine
+    container_name: pavion-rts-postgres
+    restart: always
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-pavion}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-pavion_secure_pass_2026}
+      POSTGRES_DB: ${POSTGRES_DB:-pavion_rts}
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      - ./server/prisma/migrations_postgresql/init_enterprise_postgresql.sql:/docker-entrypoint-initdb.d/01_init.sql:ro
+      - ./server/prisma/migrations_postgresql/seed_enterprise_postgresql.sql:/docker-entrypoint-initdb.d/02_seed.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-pavion} -d ${POSTGRES_DB:-pavion_rts}"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    networks:
+      - pavion-network
+
+  # ===========================================================================
+  # 2. IN-MEMORY CACHE & JOB QUEUE: Redis 7
+  # ===========================================================================
+  redis:
+    image: redis:7-alpine
+    container_name: pavion-rts-redis
+    restart: always
+    command: redis-server --appendonly yes
+    ports:
+      - "6379:6379"
+    volumes:
+      - redisdata:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    networks:
+      - pavion-network
+
+  # ===========================================================================
+  # 3. BACKEND API: Node.js / Express / NestJS REST API Gateway
+  # ===========================================================================
+  api:
+    build:
+      context: ./server
+      dockerfile: Dockerfile
+    container_name: pavion-rts-api
+    restart: always
+    environment:
+      NODE_ENV: production
+      PORT: 5055
+      DATABASE_URL: postgresql://${POSTGRES_USER:-pavion}:${POSTGRES_PASSWORD:-pavion_secure_pass_2026}@postgres:5432/${POSTGRES_DB:-pavion_rts}?schema=public
+      REDIS_URL: redis://redis:6379
+      JWT_SECRET: ${JWT_SECRET:-pavion_super_secret_jwt_key_2026_enterprise}
+      CLIENT_URL: http://localhost:3003
+    ports:
+      - "5055:5055"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - pavion-network
+
+  # ===========================================================================
+  # 4. BACKGROUND WORKER: BullMQ Worker (Resume Parser & Alerts)
+  # ===========================================================================
+  worker:
+    build:
+      context: ./server
+      dockerfile: Dockerfile
+    container_name: pavion-rts-worker
+    restart: always
+    command: npm run worker
+    environment:
+      NODE_ENV: production
+      DATABASE_URL: postgresql://${POSTGRES_USER:-pavion}:${POSTGRES_PASSWORD:-pavion_secure_pass_2026}@postgres:5432/${POSTGRES_DB:-pavion_rts}?schema=public
+      REDIS_URL: redis://redis:6379
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - pavion-network
+
+  # ===========================================================================
+  # 5. FRONTEND WEB APP: React 18 / Next.js Client on Port 3003
+  # ===========================================================================
+  web:
+    build:
+      context: ./client
+      dockerfile: Dockerfile
+    container_name: pavion-rts-web
+    restart: always
+    environment:
+      NODE_ENV: production
+      VITE_API_BASE_URL: http://localhost:5055/api/v1
+    ports:
+      - "3003:3003"
+    depends_on:
+      - api
+    networks:
+      - pavion-network
+
+volumes:
+  pgdata:
+    driver: local
+  redisdata:
+    driver: local
+
+networks:
+  pavion-network:
+    driver: bridge

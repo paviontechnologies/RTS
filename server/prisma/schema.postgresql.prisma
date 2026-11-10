@@ -1,0 +1,666 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+  schemas  = ["core", "auth", "crm", "ats", "recruitment", "compliance", "operations", "analytics"]
+}
+
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["multiSchema"]
+}
+
+// =============================================================================
+// 1. CORE SCHEMA
+// =============================================================================
+
+model Organization {
+  id              String         @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name            String         @db.VarChar(200)
+  legalName       String?        @map("legal_name") @db.VarChar(250)
+  slug            String         @unique @db.VarChar(150)
+  logoUrl         String?        @map("logo_url")
+  website         String?
+  businessEmail   String?        @map("business_email") @db.VarChar(255)
+  phone           String?        @db.VarChar(30)
+  timezone        String         @default("America/New_York") @db.VarChar(60)
+  currency        String         @default("USD") @db.Char(3)
+  dateFormat      String         @default("MM/DD/YYYY") @map("date_format") @db.VarChar(30)
+  status          String         @default("ACTIVE") @db.VarChar(30)
+  config          Json?          @default("{}")
+  createdAt       DateTime       @default(now()) @map("created_at") @db.Timestamptz()
+  updatedAt       DateTime       @default(now()) @updatedAt @map("updated_at") @db.Timestamptz()
+
+  departments     Department[]
+  roles           Role[]
+  users           User[]
+  leads           Lead[]
+  accounts        Account[]
+  jobs            JobRequisition[]
+  candidates      Candidate[]
+  talentPools     TalentPool[]
+  candidateJobs   CandidateJob[]
+  submissions     Submission[]
+  offers          Offer[]
+  placements      Placement[]
+  onboardingTasks OnboardingTask[]
+  credentials     CandidateCredential[]
+  auditLogs       AuditLog[]
+
+  @@map("organizations")
+  @@schema("core")
+}
+
+model Department {
+  id             String       @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  organizationId String       @map("organization_id") @db.Uuid
+  name           String       @db.VarChar(150)
+  code           String?      @db.VarChar(50)
+  headUserId     String?      @map("head_user_id") @db.Uuid
+  status         String       @default("ACTIVE") @db.VarChar(30)
+  createdAt      DateTime     @default(now()) @map("created_at") @db.Timestamptz()
+  updatedAt      DateTime     @default(now()) @updatedAt @map("updated_at") @db.Timestamptz()
+
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  users          User[]
+
+  @@unique([organizationId, name], map: "uq_dept_org_name")
+  @@map("departments")
+  @@schema("core")
+}
+
+// =============================================================================
+// 2. AUTH SCHEMA
+// =============================================================================
+
+model Role {
+  id              String           @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  organizationId  String           @map("organization_id") @db.Uuid
+  name            String           @db.VarChar(100)
+  code            String           @db.VarChar(50)
+  description     String?
+  isSystemDefault Boolean          @default(false) @map("is_system_default")
+  createdAt       DateTime         @default(now()) @map("created_at") @db.Timestamptz()
+
+  organization    Organization     @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  userRoles       UserRole[]
+  permissions     RolePermission[]
+
+  @@unique([organizationId, code], map: "uq_role_org_code")
+  @@map("roles")
+  @@schema("auth")
+}
+
+model Permission {
+  id          String           @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  code        String           @unique @db.VarChar(100)
+  module      String           @db.VarChar(50)
+  action      String           @db.VarChar(50)
+  description String?
+  createdAt   DateTime         @default(now()) @map("created_at") @db.Timestamptz()
+
+  roles       RolePermission[]
+
+  @@map("permissions")
+  @@schema("auth")
+}
+
+model RolePermission {
+  roleId       String     @map("role_id") @db.Uuid
+  permissionId String     @map("permission_id") @db.Uuid
+  grantedAt    DateTime   @default(now()) @map("granted_at") @db.Timestamptz()
+
+  role         Role       @relation(fields: [roleId], references: [id], onDelete: Cascade)
+  permission   Permission @relation(fields: [permissionId], references: [id], onDelete: Cascade)
+
+  @@id([roleId, permissionId])
+  @@map("role_permissions")
+  @@schema("auth")
+}
+
+model User {
+  id              String          @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  organizationId  String          @map("organization_id") @db.Uuid
+  departmentId    String?         @map("department_id") @db.Uuid
+  managerId       String?         @map("manager_id") @db.Uuid
+  firstName       String          @map("first_name") @db.VarChar(100)
+  lastName        String          @map("last_name") @db.VarChar(100)
+  email           String          @db.VarChar(255)
+  passwordHash    String          @map("password_hash")
+  phone           String?         @db.VarChar(30)
+  avatarUrl       String?         @map("avatar_url")
+  status          String          @default("ACTIVE") @db.VarChar(30)
+  isMfaEnabled    Boolean         @default(false) @map("is_mfa_enabled")
+  lastLoginAt     DateTime?       @map("last_login_at") @db.Timestamptz()
+  createdAt       DateTime        @default(now()) @map("created_at") @db.Timestamptz()
+  updatedAt       DateTime        @default(now()) @updatedAt @map("updated_at") @db.Timestamptz()
+
+  organization    Organization    @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  department      Department?     @relation(fields: [departmentId], references: [id])
+  userRoles       UserRole[]
+  managedAccounts Account[]       @relation("AccountManager")
+  createdJobs     JobRequisition[] @relation("JobCreator")
+  jobAssignments  JobAssignment[]
+
+  @@unique([organizationId, email], map: "uq_user_org_email")
+  @@map("users")
+  @@schema("auth")
+}
+
+model UserRole {
+  userId     String   @map("user_id") @db.Uuid
+  roleId     String   @map("role_id") @db.Uuid
+  assignedAt DateTime @default(now()) @map("assigned_at") @db.Timestamptz()
+
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  role       Role     @relation(fields: [roleId], references: [id], onDelete: Cascade)
+
+  @@id([userId, roleId])
+  @@map("user_roles")
+  @@schema("auth")
+}
+
+// =============================================================================
+// 3. CRM SCHEMA
+// =============================================================================
+
+model Lead {
+  id             String       @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  organizationId String       @map("organization_id") @db.Uuid
+  firstName      String       @map("first_name") @db.VarChar(100)
+  lastName       String       @map("last_name") @db.VarChar(100)
+  companyName    String       @map("company_name") @db.VarChar(200)
+  title          String?      @db.VarChar(150)
+  email          String       @db.VarChar(255)
+  phone          String?      @db.VarChar(30)
+  source         String       @default("Direct Outreach") @db.VarChar(100)
+  status         String       @default("NEW") @db.VarChar(30)
+  score          Int          @default(0)
+  estimatedValue Decimal      @default(0) @map("estimated_value") @db.Decimal(12, 2)
+  createdAt      DateTime     @default(now()) @map("created_at") @db.Timestamptz()
+  updatedAt      DateTime     @default(now()) @updatedAt @map("updated_at") @db.Timestamptz()
+
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+
+  @@map("leads")
+  @@schema("crm")
+}
+
+model Account {
+  id               String           @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  organizationId   String           @map("organization_id") @db.Uuid
+  accountCode      String?          @map("account_code") @db.VarChar(50)
+  name             String           @db.VarChar(255)
+  legalName        String?          @map("legal_name") @db.VarChar(255)
+  website          String?
+  industry         String?          @db.VarChar(100)
+  companySize      String?          @map("company_size") @db.VarChar(50)
+  accountType      String           @default("Direct Client") @map("account_type") @db.VarChar(50)
+  tier             String           @default("Tier 1") @db.VarChar(30)
+  accountManagerId String?          @map("account_manager_id") @db.Uuid
+  paymentTerms     String           @default("Net 30") @map("payment_terms") @db.VarChar(100)
+  msaStatus        String           @default("Active") @map("msa_status") @db.VarChar(30)
+  status           String           @default("ACTIVE") @db.VarChar(30)
+  createdAt        DateTime         @default(now()) @map("created_at") @db.Timestamptz()
+  updatedAt        DateTime         @default(now()) @updatedAt @map("updated_at") @db.Timestamptz()
+
+  organization     Organization     @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  accountManager   User?            @relation("AccountManager", fields: [accountManagerId], references: [id])
+  contacts         Contact[]
+  jobs             JobRequisition[]
+  rtrRecords       RTRRecord[]
+  submissions      Submission[]
+  placements       Placement[]
+
+  @@unique([organizationId, accountCode], map: "uq_account_org_code")
+  @@map("accounts")
+  @@schema("crm")
+}
+
+model Contact {
+  id              String           @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  organizationId  String           @map("organization_id") @db.Uuid
+  accountId       String           @map("account_id") @db.Uuid
+  firstName       String           @map("first_name") @db.VarChar(100)
+  lastName        String           @map("last_name") @db.VarChar(100)
+  title           String?          @db.VarChar(150)
+  department      String?          @db.VarChar(100)
+  email           String           @db.VarChar(255)
+  phone           String?          @db.VarChar(30)
+  isPrimary       Boolean          @default(false) @map("is_primary")
+  isHiringManager Boolean          @default(false) @map("is_hiring_manager")
+  status          String           @default("ACTIVE") @db.VarChar(30)
+  createdAt       DateTime         @default(now()) @map("created_at") @db.Timestamptz()
+  updatedAt       DateTime         @default(now()) @updatedAt @map("updated_at") @db.Timestamptz()
+
+  account         Account          @relation(fields: [accountId], references: [id], onDelete: Cascade)
+  jobs            JobRequisition[]
+
+  @@map("contacts")
+  @@schema("crm")
+}
+
+// =============================================================================
+// 4. ATS SCHEMA
+// =============================================================================
+
+model JobRequisition {
+  id              String          @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  organizationId  String          @map("organization_id") @db.Uuid
+  jobCode         String          @map("job_code") @db.VarChar(50)
+  accountId       String          @map("account_id") @db.Uuid
+  contactId       String?         @map("contact_id") @db.Uuid
+  title           String          @db.VarChar(255)
+  description     String?
+  requirements    String?
+  employmentType  String          @default("Contract - W2") @map("employment_type") @db.VarChar(50)
+  workMode        String          @default("Hybrid") @map("work_mode") @db.VarChar(30)
+  location        Json?           @default("{}")
+  openings        Int             @default(1)
+  filledPositions Int             @default(0) @map("filled_positions")
+  experienceMin   Decimal         @default(0) @map("experience_min") @db.Decimal(5, 2)
+  experienceMax   Decimal?        @map("experience_max") @db.Decimal(5, 2)
+  payRateMin      Decimal?        @map("pay_rate_min") @db.Decimal(12, 2)
+  payRateMax      Decimal?        @map("pay_rate_max") @db.Decimal(12, 2)
+  billRateMin     Decimal?        @map("bill_rate_min") @db.Decimal(12, 2)
+  billRateMax     Decimal?        @map("bill_rate_max") @db.Decimal(12, 2)
+  rateUnit        String          @default("Hourly") @map("rate_unit") @db.VarChar(20)
+  priority        String          @default("High") @db.VarChar(20)
+  status          String          @default("Open") @db.VarChar(30)
+  createdBy       String?         @map("created_by") @db.Uuid
+  createdAt       DateTime        @default(now()) @map("created_at") @db.Timestamptz()
+  updatedAt       DateTime        @default(now()) @updatedAt @map("updated_at") @db.Timestamptz()
+
+  organization    Organization    @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  account         Account         @relation(fields: [accountId], references: [id], onDelete: Cascade)
+  contact         Contact?        @relation(fields: [contactId], references: [id])
+  creator         User?           @relation("JobCreator", fields: [createdBy], references: [id])
+  jobAssignments  JobAssignment[]
+  candidateJobs   CandidateJob[]
+  rtrRecords      RTRRecord[]
+  offers          Offer[]
+  placements      Placement[]
+
+  @@unique([organizationId, jobCode], map: "uq_job_org_code")
+  @@map("job_requisitions")
+  @@schema("ats")
+}
+
+model JobAssignment {
+  id             String         @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  organizationId String         @map("organization_id") @db.Uuid
+  jobId          String         @map("job_id") @db.Uuid
+  recruiterId    String         @map("recruiter_id") @db.Uuid
+  assignedAt     DateTime       @default(now()) @map("assigned_at") @db.Timestamptz()
+  status         String         @default("Active") @db.VarChar(30)
+
+  job            JobRequisition @relation(fields: [jobId], references: [id], onDelete: Cascade)
+  recruiter      User           @relation(fields: [recruiterId], references: [id], onDelete: Cascade)
+
+  @@unique([jobId, recruiterId], map: "uq_job_recruiter")
+  @@map("job_assignments")
+  @@schema("ats")
+}
+
+model Candidate {
+  id                String                @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  organizationId    String                @map("organization_id") @db.Uuid
+  candidateCode     String?               @map("candidate_code") @db.VarChar(50)
+  firstName         String                @map("first_name") @db.VarChar(100)
+  lastName          String                @map("last_name") @db.VarChar(100)
+  professionalSummary String?             @map("professional_summary")
+  currentTitle      String?               @map("current_title") @db.VarChar(200)
+  currentCompany    String?               @map("current_company") @db.VarChar(200)
+  totalExperience   Decimal               @default(0) @map("total_experience") @db.Decimal(5, 2)
+  workAuthorization String                @default("US Citizen") @map("work_authorization") @db.VarChar(50)
+  expectedPayRate   Decimal?              @map("expected_pay_rate") @db.Decimal(12, 2)
+  source            String                @default("LinkedIn") @db.VarChar(100)
+  status            String                @default("Active") @db.VarChar(30)
+  createdAt         DateTime              @default(now()) @map("created_at") @db.Timestamptz()
+  updatedAt         DateTime              @default(now()) @updatedAt @map("updated_at") @db.Timestamptz()
+
+  organization      Organization          @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  emails            CandidateEmail[]
+  phones            CandidatePhone[]
+  skills            CandidateSkill[]
+  candidateJobs     CandidateJob[]
+  rtrRecords        RTRRecord[]
+  offers            Offer[]
+  placements        Placement[]
+  onboardingTasks   OnboardingTask[]
+  credentials       CandidateCredential[]
+  poolMembers       TalentPoolMember[]
+
+  @@map("candidates")
+  @@schema("ats")
+}
+
+model CandidateEmail {
+  id             String       @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  organizationId String       @map("organization_id") @db.Uuid
+  candidateId    String       @map("candidate_id") @db.Uuid
+  email          String       @db.VarChar(255)
+  isPrimary      Boolean      @default(false) @map("is_primary")
+  isVerified     Boolean      @default(false) @map("is_verified")
+
+  candidate      Candidate    @relation(fields: [candidateId], references: [id], onDelete: Cascade)
+
+  @@unique([organizationId, email], map: "uq_cand_org_email")
+  @@map("candidate_emails")
+  @@schema("ats")
+}
+
+model CandidatePhone {
+  id             String       @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  organizationId String       @map("organization_id") @db.Uuid
+  candidateId    String       @map("candidate_id") @db.Uuid
+  phoneNumber    String       @map("phone_number") @db.VarChar(35)
+  phoneType      String       @default("Mobile") @map("phone_type") @db.VarChar(20)
+  isPrimary      Boolean      @default(false) @map("is_primary")
+
+  candidate      Candidate    @relation(fields: [candidateId], references: [id], onDelete: Cascade)
+
+  @@map("candidate_phones")
+  @@schema("ats")
+}
+
+model CandidateSkill {
+  id              String       @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  organizationId  String       @map("organization_id") @db.Uuid
+  candidateId     String       @map("candidate_id") @db.Uuid
+  skillName       String       @map("skill_name") @db.VarChar(150)
+  experienceYears Decimal      @default(0) @map("experience_years") @db.Decimal(5, 2)
+  proficiency     String       @default("Expert") @db.VarChar(30)
+
+  candidate       Candidate    @relation(fields: [candidateId], references: [id], onDelete: Cascade)
+
+  @@map("candidate_skills")
+  @@schema("ats")
+}
+
+model TalentPool {
+  id             String             @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  organizationId String             @map("organization_id") @db.Uuid
+  name           String             @db.VarChar(150)
+  description    String?
+  domain         String             @default("Information Technology") @db.VarChar(100)
+  targetSkills   String?            @map("target_skills")
+  createdAt      DateTime           @default(now()) @map("created_at") @db.Timestamptz()
+  updatedAt      DateTime           @default(now()) @updatedAt @map("updated_at") @db.Timestamptz()
+
+  organization   Organization       @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  members        TalentPoolMember[]
+
+  @@map("talent_pools")
+  @@schema("ats")
+}
+
+model TalentPoolMember {
+  id           String     @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  talentPoolId String     @map("talent_pool_id") @db.Uuid
+  candidateId  String     @map("candidate_id") @db.Uuid
+  notes        String?
+  status       String     @default("Active") @db.VarChar(30)
+  addedAt      DateTime   @default(now()) @map("added_at") @db.Timestamptz()
+
+  talentPool   TalentPool @relation(fields: [talentPoolId], references: [id], onDelete: Cascade)
+  candidate    Candidate  @relation(fields: [candidateId], references: [id], onDelete: Cascade)
+
+  @@unique([talentPoolId, candidateId], map: "uq_pool_cand")
+  @@map("talent_pool_members")
+  @@schema("ats")
+}
+
+// =============================================================================
+// 5. RECRUITMENT ENGINE SCHEMA
+// =============================================================================
+
+model RecruitmentStage {
+  id             String         @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  organizationId String         @map("organization_id") @db.Uuid
+  name           String         @db.VarChar(100)
+  stageCode      String         @map("stage_code") @db.VarChar(50)
+  sequence       Int
+  stageType      String         @default("ACTIVE") @map("stage_type") @db.VarChar(30)
+  isActive       Boolean        @default(true) @map("is_active")
+  isTerminal     Boolean        @default(false) @map("is_terminal")
+
+  candidateJobs  CandidateJob[]
+
+  @@unique([organizationId, stageCode], map: "uq_stage_org_code")
+  @@map("recruitment_stages")
+  @@schema("recruitment")
+}
+
+model CandidateJob {
+  id                String            @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  organizationId    String            @map("organization_id") @db.Uuid
+  candidateId       String            @map("candidate_id") @db.Uuid
+  jobId             String            @map("job_id") @db.Uuid
+  recruiterId       String?           @map("recruiter_id") @db.Uuid
+  currentStageId    String?           @map("current_stage_id") @db.Uuid
+  applicationStatus String            @default("InProcess") @map("application_status") @db.VarChar(30)
+  matchScore        Decimal           @default(0) @map("match_score") @db.Decimal(5, 2)
+  appliedAt         DateTime          @default(now()) @map("applied_at") @db.Timestamptz()
+  lastActivityAt    DateTime          @default(now()) @map("last_activity_at") @db.Timestamptz()
+  createdAt         DateTime          @default(now()) @map("created_at") @db.Timestamptz()
+
+  organization      Organization      @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  candidate         Candidate         @relation(fields: [candidateId], references: [id], onDelete: Cascade)
+  job               JobRequisition    @relation(fields: [jobId], references: [id], onDelete: Cascade)
+  currentStage      RecruitmentStage? @relation(fields: [currentStageId], references: [id])
+  stageHistory      CandidateStageHistory[]
+  submissions       Submission[]
+  interviews        Interview[]
+
+  @@unique([organizationId, candidateId, jobId], map: "uq_candidate_job")
+  @@map("candidate_jobs")
+  @@schema("recruitment")
+}
+
+model CandidateStageHistory {
+  id             String       @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  organizationId String       @map("organization_id") @db.Uuid
+  candidateJobId String       @map("candidate_job_id") @db.Uuid
+  fromStageId    String?      @map("from_stage_id") @db.Uuid
+  toStageId      String?      @map("to_stage_id") @db.Uuid
+  reason         String?
+  changedAt      DateTime     @default(now()) @map("changed_at") @db.Timestamptz()
+
+  candidateJob   CandidateJob @relation(fields: [candidateJobId], references: [id], onDelete: Cascade)
+
+  @@map("candidate_stage_history")
+  @@schema("recruitment")
+}
+
+model RTRRecord {
+  id              String         @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  organizationId  String         @map("organization_id") @db.Uuid
+  candidateId     String         @map("candidate_id") @db.Uuid
+  jobId           String         @map("job_id") @db.Uuid
+  clientAccountId String         @map("client_account_id") @db.Uuid
+  consentMethod   String         @default("EmailConfirmation") @map("consent_method") @db.VarChar(50)
+  consentStatus   String         @default("Approved") @map("consent_status") @db.VarChar(30)
+  consentDate     DateTime       @default(now()) @map("consent_date") @db.Timestamptz()
+  createdAt       DateTime       @default(now()) @map("created_at") @db.Timestamptz()
+
+  candidate       Candidate      @relation(fields: [candidateId], references: [id], onDelete: Cascade)
+  job             JobRequisition @relation(fields: [jobId], references: [id], onDelete: Cascade)
+  clientAccount   Account        @relation(fields: [clientAccountId], references: [id], onDelete: Cascade)
+  submissions     Submission[]
+
+  @@map("rtr_records")
+  @@schema("recruitment")
+}
+
+model Submission {
+  id              String         @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  organizationId  String         @map("organization_id") @db.Uuid
+  candidateJobId  String         @map("candidate_job_id") @db.Uuid
+  clientAccountId String         @map("client_account_id") @db.Uuid
+  rtrId           String?        @map("rtr_id") @db.Uuid
+  payRate         Decimal        @map("pay_rate") @db.Decimal(12, 2)
+  billRate        Decimal        @map("bill_rate") @db.Decimal(12, 2)
+  currency        String         @default("USD") @db.Char(3)
+  submittedAt     DateTime       @default(now()) @map("submitted_at") @db.Timestamptz()
+  status          String         @default("Submitted") @db.VarChar(30)
+  clientFeedback  String?        @map("client_feedback")
+  createdAt       DateTime       @default(now()) @map("created_at") @db.Timestamptz()
+
+  organization    Organization   @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  candidateJob    CandidateJob   @relation(fields: [candidateJobId], references: [id], onDelete: Cascade)
+  clientAccount   Account        @relation(fields: [clientAccountId], references: [id], onDelete: Cascade)
+  rtr             RTRRecord?     @relation(fields: [rtrId], references: [id])
+  interviews      Interview[]
+  offers          Offer[]
+  placements      Placement[]
+
+  @@map("submissions")
+  @@schema("recruitment")
+}
+
+model Interview {
+  id              String       @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  organizationId  String       @map("organization_id") @db.Uuid
+  candidateJobId  String       @map("candidate_job_id") @db.Uuid
+  submissionId    String?      @map("submission_id") @db.Uuid
+  roundNumber     Int          @default(1) @map("round_number")
+  interviewType   String       @default("Technical") @map("interview_type") @db.VarChar(50)
+  scheduledAt     DateTime     @map("scheduled_at") @db.Timestamptz()
+  durationMinutes Int          @default(60) @map("duration_minutes")
+  meetingUrl      String?      @map("meeting_url")
+  status          String       @default("Scheduled") @db.VarChar(30)
+  createdAt       DateTime     @default(now()) @map("created_at") @db.Timestamptz()
+
+  candidateJob    CandidateJob @relation(fields: [candidateJobId], references: [id], onDelete: Cascade)
+  submission      Submission?  @relation(fields: [submissionId], references: [id])
+
+  @@map("interviews")
+  @@schema("recruitment")
+}
+
+model Offer {
+  id                String         @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  organizationId    String         @map("organization_id") @db.Uuid
+  submissionId      String?        @map("submission_id") @db.Uuid
+  candidateId       String         @map("candidate_id") @db.Uuid
+  jobId             String         @map("job_id") @db.Uuid
+  offerCode         String         @map("offer_code") @db.VarChar(50)
+  payRate           Decimal        @map("pay_rate") @db.Decimal(12, 2)
+  billRate          Decimal        @map("bill_rate") @db.Decimal(12, 2)
+  spreadHourly      Decimal        @map("spread_hourly") @db.Decimal(12, 2)
+  marginPercentage  Decimal        @map("margin_percentage") @db.Decimal(5, 2)
+  employmentType    String         @default("Contract - W2") @map("employment_type") @db.VarChar(50)
+  startDate         DateTime       @map("start_date") @db.Date
+  endDate           DateTime?      @map("end_date") @db.Date
+  status            String         @default("Draft") @db.VarChar(30)
+  offerLetterContent String?       @map("offer_letter_content")
+  createdAt         DateTime       @default(now()) @map("created_at") @db.Timestamptz()
+  updatedAt         DateTime       @default(now()) @updatedAt @map("updated_at") @db.Timestamptz()
+
+  organization      Organization   @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  submission        Submission?    @relation(fields: [submissionId], references: [id])
+  candidate         Candidate      @relation(fields: [candidateId], references: [id], onDelete: Cascade)
+  job               JobRequisition @relation(fields: [jobId], references: [id], onDelete: Cascade)
+  placements        Placement[]
+
+  @@map("offers")
+  @@schema("recruitment")
+}
+
+model Placement {
+  id              String           @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  organizationId  String           @map("organization_id") @db.Uuid
+  submissionId    String?          @map("submission_id") @db.Uuid
+  candidateId     String           @map("candidate_id") @db.Uuid
+  jobId           String           @map("job_id") @db.Uuid
+  clientAccountId String           @map("client_account_id") @db.Uuid
+  offerId         String?          @map("offer_id") @db.Uuid
+  startDate       DateTime         @map("start_date") @db.Date
+  endDate         DateTime?        @map("end_date") @db.Date
+  employmentType  String           @default("Contract - W2") @map("employment_type") @db.VarChar(50)
+  payRate         Decimal          @map("pay_rate") @db.Decimal(12, 2)
+  billRate        Decimal          @map("bill_rate") @db.Decimal(12, 2)
+  grossMargin     Decimal          @map("gross_margin") @db.Decimal(12, 2)
+  status          String           @default("Active") @db.VarChar(30)
+  createdAt       DateTime         @default(now()) @map("created_at") @db.Timestamptz()
+  updatedAt       DateTime         @default(now()) @updatedAt @map("updated_at") @db.Timestamptz()
+
+  organization    Organization     @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  submission      Submission?      @relation(fields: [submissionId], references: [id])
+  candidate       Candidate        @relation(fields: [candidateId], references: [id], onDelete: Cascade)
+  job             JobRequisition   @relation(fields: [jobId], references: [id], onDelete: Cascade)
+  clientAccount   Account          @relation(fields: [clientAccountId], references: [id], onDelete: Cascade)
+  offer           Offer?           @relation(fields: [offerId], references: [id])
+  onboardingTasks OnboardingTask[]
+
+  @@map("placements")
+  @@schema("recruitment")
+}
+
+model OnboardingTask {
+  id             String       @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  organizationId String       @map("organization_id") @db.Uuid
+  placementId    String?      @map("placement_id") @db.Uuid
+  candidateId    String       @map("candidate_id") @db.Uuid
+  category       String       @default("Document") @db.VarChar(50)
+  title          String       @db.VarChar(200)
+  description    String?
+  status         String       @default("Pending") @db.VarChar(30)
+  documentUrl    String?      @map("document_url")
+  dueDate        DateTime?    @map("due_date") @db.Date
+  createdAt      DateTime     @default(now()) @map("created_at") @db.Timestamptz()
+  updatedAt      DateTime     @default(now()) @updatedAt @map("updated_at") @db.Timestamptz()
+
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  placement      Placement?   @relation(fields: [placementId], references: [id])
+  candidate      Candidate    @relation(fields: [candidateId], references: [id], onDelete: Cascade)
+
+  @@map("onboarding_tasks")
+  @@schema("recruitment")
+}
+
+// =============================================================================
+// 6. COMPLIANCE SCHEMA
+// =============================================================================
+
+model CandidateCredential {
+  id                 String       @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  organizationId     String       @map("organization_id") @db.Uuid
+  candidateId        String       @map("candidate_id") @db.Uuid
+  credentialType     String       @default("Certification") @map("credential_type") @db.VarChar(50)
+  name               String       @db.VarChar(200)
+  issuingAuthority   String?      @map("issuing_authority") @db.VarChar(200)
+  credentialIdNumber String?      @map("credential_id_number") @db.VarChar(100)
+  state              String       @default("National") @db.VarChar(50)
+  issueDate          DateTime?    @map("issue_date") @db.Date
+  expiryDate         DateTime?    @map("expiry_date") @db.Date
+  verificationStatus String       @default("Verified") @map("verification_status") @db.VarChar(30)
+  createdAt          DateTime     @default(now()) @map("created_at") @db.Timestamptz()
+  updatedAt          DateTime     @default(now()) @updatedAt @map("updated_at") @db.Timestamptz()
+
+  organization       Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  candidate          Candidate    @relation(fields: [candidateId], references: [id], onDelete: Cascade)
+
+  @@map("candidate_credentials")
+  @@schema("compliance")
+}
+
+// =============================================================================
+// 7. ANALYTICS SCHEMA
+// =============================================================================
+
+model AuditLog {
+  id             String       @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  organizationId String       @map("organization_id") @db.Uuid
+  userId         String?      @map("user_id") @db.Uuid
+  action         String       @db.VarChar(100)
+  entityType     String       @map("entity_type") @db.VarChar(50)
+  entityId       String?      @map("entity_id") @db.VarChar(100)
+  newState       Json?        @map("new_state")
+  createdAt      DateTime     @default(now()) @map("created_at") @db.Timestamptz()
+
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+
+  @@map("audit_logs")
+  @@schema("analytics")
+}
