@@ -35,3 +35,24 @@ Thumbs.db
 .idea/
 *.sublime-project
 *.sublime-workspace
+
+# Python cache & virtual environments
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+ENV/
+.venv/
+
+# Uploads & local storage
+uploads/
+server/uploads/
+
+# Backups
+backups/
+
+# Redis dump
+dump.rdb

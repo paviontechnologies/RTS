@@ -1,0 +1,20 @@
+# Pavion RTS - GitHub Linguist Language & Attribute Definitions
+
+# Documentation
+docs/* linguist-documentation
+*.md linguist-documentation
+
+# Generated & Build Artifacts
+client/dist/* linguist-vendored
+server/dist/* linguist-vendored
+node_modules/* linguist-vendored
+.system_generated/* linguist-vendored
+
+# Explicit Language Classifications
+services/ai-engine/*.py linguist-language=Python
+database/*.sql linguist-language=SQL
+server/prisma/migrations_postgresql/*.sql linguist-language=SQL
+scripts/*.sh linguist-language=Shell
+Dockerfile linguist-language=Dockerfile
+docker-compose.yml linguist-language=YAML
+.github/workflows/*.yml linguist-language=YAML

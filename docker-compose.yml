@@ -47,7 +47,28 @@ services:
       - pavion-network
 
   # ===========================================================================
-  # 3. BACKEND API: Node.js / Express / NestJS REST API Gateway
+  # 3. AI ENGINE: Python 3.12 / FastAPI Semantic Matcher & Resume Parser
+  # ===========================================================================
+  ai-engine:
+    build:
+      context: ./services/ai-engine
+      dockerfile: Dockerfile
+    container_name: pavion-rts-ai-engine
+    restart: always
+    environment:
+      PORT: 8000
+    ports:
+      - "8000:8000"
+    healthcheck:
+      test: ["CMD-SHELL", "python3 -c \"import urllib.request; urllib.request.urlopen('http://localhost:8000/health')\" || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+    networks:
+      - pavion-network
+
+  # ===========================================================================
+  # 4. BACKEND API: Node.js / Express REST API Gateway
   # ===========================================================================
   api:
     build:
@@ -60,6 +81,7 @@ services:
       PORT: 5055
       DATABASE_URL: postgresql://${POSTGRES_USER:-pavion}:${POSTGRES_PASSWORD:-pavion_secure_pass_2026}@postgres:5432/${POSTGRES_DB:-pavion_rts}?schema=public
       REDIS_URL: redis://redis:6379
+      AI_ENGINE_URL: http://ai-engine:8000
       JWT_SECRET: ${JWT_SECRET:-pavion_super_secret_jwt_key_2026_enterprise}
       CLIENT_URL: http://localhost:3003
     ports:
@@ -69,11 +91,13 @@ services:
         condition: service_healthy
       redis:
         condition: service_healthy
+      ai-engine:
+        condition: service_started
     networks:
       - pavion-network
 
   # ===========================================================================
-  # 4. BACKGROUND WORKER: BullMQ Worker (Resume Parser & Alerts)
+  # 5. BACKGROUND WORKER: Async Job Queue Worker (Resume Parser & Alerts)
   # ===========================================================================
   worker:
     build:
@@ -86,6 +110,7 @@ services:
       NODE_ENV: production
       DATABASE_URL: postgresql://${POSTGRES_USER:-pavion}:${POSTGRES_PASSWORD:-pavion_secure_pass_2026}@postgres:5432/${POSTGRES_DB:-pavion_rts}?schema=public
       REDIS_URL: redis://redis:6379
+      AI_ENGINE_URL: http://ai-engine:8000
     depends_on:
       postgres:
         condition: service_healthy
@@ -95,7 +120,7 @@ services:
       - pavion-network
 
   # ===========================================================================
-  # 5. FRONTEND WEB APP: React 18 / Next.js Client on Port 3003
+  # 6. FRONTEND WEB APP: React 18 Client on Port 3003
   # ===========================================================================
   web:
     build:
