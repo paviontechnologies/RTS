@@ -152,7 +152,8 @@ export const Opportunities: React.FC = () => {
       {/* Kanban Board Container */}
       <Box sx={{ display: 'flex', gap: 2, overflowX: 'auto', pb: 3 }}>
         {STAGES.map((stage) => {
-          const stageOpps = opportunities.filter((o) => o.stage === stage);
+          const norm = (s: string) => (s || '').replace(/[\s_-]+/g, '').toLowerCase();
+          const stageOpps = opportunities.filter((o) => norm(o.stage) === norm(stage));
           const stageValue = stageOpps.reduce((sum, o) => sum + (o.estimatedValue || 0), 0);
           const isWon = stage === 'ClosedWon';
 
