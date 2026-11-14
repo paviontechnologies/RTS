@@ -1,0 +1,10 @@
+[
+  {
+    "id": "bench_job_01",
+    "title": "AWS Cloud Infrastructure Lead",
+    "required_skills": ["AWS", "Docker", "Kubernetes", "Terraform", "Python"],
+    "experience_min": 7.0,
+    "work_auth_required": "Any",
+    "pay_rate_max": 95.0
+  }
+]

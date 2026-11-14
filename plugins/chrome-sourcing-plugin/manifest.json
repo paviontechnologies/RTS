@@ -1,0 +1,17 @@
+{
+  "manifest_version": 3,
+  "name": "Pavion RTS – 1-Click Candidate Sourcing Extension",
+  "version": "1.0.0",
+  "description": "Instantly source and import technical candidate profiles from LinkedIn and Dice directly into Pavion ATS.",
+  "permissions": ["activeTab", "storage"],
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "Source to Pavion RTS"
+  },
+  "content_scripts": [
+    {
+      "matches": ["*://*.linkedin.com/*", "*://*.dice.com/*"],
+      "js": ["content.js"]
+    }
+  ]
+}

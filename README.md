@@ -4,6 +4,7 @@
 [![Frontend](https://img.shields.io/badge/Frontend-React%2018%20%7C%20TypeScript%20%7C%20MUI-61DAFB.svg)](https://react.dev)
 [![API Gateway](https://img.shields.io/badge/Backend-Node.js%20%7C%20Express%20%7C%20TypeScript-339933.svg)](https://nodejs.org)
 [![AI Engine](https://img.shields.io/badge/AI%20Microservice-Python%203.12%20%7C%20FastAPI%20%7C%20Scikit--Learn-3776AB.svg)](https://fastapi.tiangolo.com)
+[![Search Indexer](https://img.shields.io/badge/Indexer-Go%201.22%20Inverted%20Search-00ADD8.svg)](https://go.dev)
 [![Database](https://img.shields.io/badge/Database-PostgreSQL%2018%20(8%20Schemas%2C%2079%20Tables)-336791.svg)](https://postgresql.org)
 [![Cache & Queues](https://img.shields.io/badge/Cache%20%26%20Queues-Redis%207%20%7C%20BullMQ-DC382D.svg)](https://redis.io)
 [![Infrastructure](https://img.shields.io/badge/DevOps-Docker%20%7C%20Shell%20%7C%20GitHub%20Actions-2496ED.svg)](https://docker.com)
@@ -32,19 +33,24 @@ graph TD
         QUEUE[BullMQ Background Job Queues]
     end
 
-    subgraph AI Layer [3. AI & Matching Engine - Python 3.12 & FastAPI]
+    subgraph AI & Agents Layer [3. AI & Analytics - Python 3.12 & FastAPI]
         FASTAPI[Python 3.12 + FastAPI Microservice - Port 8000]
+        AGENTS[Autonomous Recruiter & Sourcing Agents]
         PARSER[AI Resume Entity Recognition Engine]
         MATCHER[Weighted Candidate-Job Fit Scorer]
         KILLER[Knockout Killer Questions Evaluator]
     end
 
-    subgraph Data Layer [4. Enterprise Persistence - PostgreSQL 18 & Redis 7]
+    subgraph Search Indexer [4. High-Performance Indexing - Go]
+        GO_INDEXER[Go High-Speed Inverted Candidate Search Tool]
+    end
+
+    subgraph Data Layer [5. Enterprise Persistence - PostgreSQL 18 & Redis 7]
         PG[(PostgreSQL 18 - 8 Schemas & 79 Tables)]
         REDIS[(Redis 7 - In-Memory Cache & Job Queue)]
     end
 
-    subgraph DevOps [5. Infrastructure & CI/CD - Docker & Shell]
+    subgraph DevOps [6. Infrastructure & CI/CD - Docker & Shell]
         DOCKER[Docker Compose Multi-Container Stack]
         GHA[GitHub Actions Multi-Language CI/CD Pipeline]
         SCRIPTS[Automated Shell Deployment & Backup Scripts]
@@ -56,9 +62,11 @@ graph TD
     API -->|Async Job Dispatch| QUEUE
     API -->|Direct Upload URLs| STORAGE
     API -->|JSON REST Client| FASTAPI
+    API -->|Fast Token Search| GO_INDEXER
     FASTAPI --> PARSER
     FASTAPI --> MATCHER
     FASTAPI --> KILLER
+    FASTAPI --> AGENTS
     CACHE --> REDIS
     QUEUE --> REDIS
 ```
@@ -71,7 +79,8 @@ graph TD
 | :--- | :--- | :--- | :--- |
 | **Frontend Web App** | React 18, Vite, Material UI (MUI 5), TanStack Table | **TypeScript** | Responsive recruiter dashboards, candidate kanban, resume viewer, interview kits |
 | **API Gateway** | Node.js 20, Express, Prisma ORM, Multer, Zod | **TypeScript** | REST routes, JWT multi-tenant auth, role-based access control, schema mapping |
-| **AI Microservice** | Python 3.12, FastAPI, Uvicorn, Scikit-learn, Pydantic | **Python** | Automated resume parsing, skill taxonomy extraction, 4-tier candidate-job scoring |
+| **AI Microservice & Agents**| Python 3.12, FastAPI, Uvicorn, Scikit-learn, Pydantic | **Python** | Automated resume parsing, skill taxonomy extraction, 4-tier candidate-job scoring |
+| **Fast Search Indexer** | Go 1.22, Inverted Token Mapping, Goroutines | **Go** | Sub-millisecond candidate resume and skill keyword indexing and search |
 | **Database & Analytics** | PostgreSQL 18 (8 Schemas, 79 Tables), GIN Indexes | **SQL** | Relational integrity, audit logs, RTR compliance, placement commissions, GIN search |
 | **Cache & Queue** | Redis 7, BullMQ, In-Memory LRU Fallback | **TypeScript / C** | Dashboard KPI aggregates, session tokens, async submittal notifications |
 | **Storage Layer** | AWS S3 SDK, Local Storage Driver | **TypeScript** | Secure pre-signed upload/download URLs, resume blobs, I-9/W-4 documents |
@@ -104,53 +113,73 @@ graph TD
 
 ```text
 .
+├── .agents/                    # Autonomous AI Recruiter & Sourcer Agent Specs
+├── agents/                     # Python & TypeScript AI Recruitment Agents
+│   ├── recruiter_agent.py      # Autonomous candidate matching and ranking agent
+│   ├── sourcing_agent.py       # Candidate talent pool discovery agent
+│   ├── screening_agent.py      # Knockout killer question evaluation agent
+│   └── outreach_agent.py       # Candidate submittal & RTR negotiation agent
+│
+├── templates/                  # ATS Artifact Templates
+│   ├── resumes/                # Clean ATS-compliant resume templates (HTML, CSS, JSON, LaTeX)
+│   ├── cover-letters/          # Targeted cover letter templates
+│   ├── emails/                 # US Staffing outreach, RTR consent, interview invite, offer letters
+│   └── scorecards/             # Structured technical and behavioral scorecard rubrics
+│
+├── jds/                        # Curated US Staffing Job Descriptions (20+ Tech & Non-Tech Roles)
+│   ├── cloud/                  # AWS Solutions Architect, Azure Cloud Engineer, GCP DevOps
+│   ├── fullstack/              # Java Spring Boot Lead, Python FastAPI Dev, React Architect
+│   ├── data/                   # Snowflake Data Engineer, Databricks Spark Specialist
+│   ├── crm-erp/                # Salesforce Apex Developer, SAP S/4HANA Consultant
+│   └── cybersecurity/          # IAM & SecOps Engineer, SDET QA Automation
+│
+├── interview-prep/             # Comprehensive Interview Kits & Question Banks
+│   ├── technical/              # System design, DSA, coding questionnaires by role
+│   ├── behavioral/             # STAR-method behavioral rubrics & culture-fit questions
+│   └── knockout/               # Visa sponsorship, location, rate knockout killer questions
+│
+├── evals/                      # AI Benchmark & Evaluation Suite
+│   ├── resume_evals.py         # Parsing accuracy & entity recognition benchmark
+│   ├── matcher_evals.py        # Semantic candidate-job scoring evaluation
+│   └── test_cases/             # Golden test fixtures & evaluation benchmarks
+│
+├── providers/                  # Job Board & Talent Source Integrations
+│   ├── linkedin.provider.ts    # LinkedIn Talent Solutions integration stub
+│   ├── dice.provider.ts        # Dice Tech Sourcing API connector
+│   └── indeed.provider.ts      # Indeed sponsored jobs client
+│
+├── plugins/                    # Browser Extension & IDE Plugins
+│   └── chrome-sourcing-plugin/ # Chrome Manifest V3 1-click candidate sourcing extension
+│
+├── batch/                      # High-Throughput Batch Processing Workers
+│   ├── bulk_resume_parser.py   # Parallel multi-core resume ingestion pipeline
+│   ├── nightly_compliance.py   # Scheduled 30/60-day visa and credential auditor
+│   └── candidate_rediscovery.py# Rediscover archived candidates for new requisitions
+│
+├── config/                     # Enterprise Staffing Governance & Taxonomy
+│   ├── skills_taxonomy.json    # 500+ classified US IT staffing skills
+│   ├── compliance_rules.json   # USCIS OPT/CPT/H-1B, E-Verify, and I-9 rules
+│   └── rate_cards.json         # Tier-1 vendor bill & pay rate limits by region
+│
+├── tools/indexer/              # High-Performance Search Indexer in Go
+│   ├── main.go                 # Fast inverted indexer for candidate resumes
+│   └── go.mod                  # Go module definition
+│
+├── reports/                    # Recruiter KPI & Client Profitability Engine
+│   ├── gross_margin.py         # Spread and commission calculation engine
+│   └── submittal_generator.py  # Formats professional client submittal packets
+│
+├── seeds/                      # Comprehensive US Staffing Seed Data
+│   ├── candidates_master.json  # 100+ realistic candidate records with full histories
+│   └── requisitions_master.json# 30+ active enterprise client requisitions
+│
 ├── client/                     # Frontend Application (React 18 + TypeScript + Vite + MUI)
-│   ├── src/
-│   │   ├── pages/              # Role Dashboards & 9 Enterprise ATS Pages
-│   │   ├── components/         # Reusable UI widgets, navigation bars, modal dialogs
-│   │   └── api/                # Axios API client integrations
-│   └── package.json
-│
 ├── server/                     # Backend API Gateway (Node.js + Express + Prisma ORM)
-│   ├── src/
-│   │   ├── controllers/        # REST route handlers
-│   │   ├── services/           # Enterprise Services:
-│   │   │   ├── storage.service.ts   # AWS S3 Pre-Signed URL Client
-│   │   │   ├── cache.service.ts     # Redis Multi-Tier Cache with In-Memory Fallback
-│   │   │   ├── queue.service.ts     # BullMQ Asynchronous Job Queues
-│   │   │   ├── aiClient.service.ts  # Python AI Engine REST Client
-│   │   │   └── resumeParser.service.ts
-│   │   └── routes/             # Express API endpoints
-│   ├── prisma/                 # PostgreSQL Multi-Schema Models & Seed Files
-│   └── package.json
-│
 ├── services/ai-engine/         # Python AI Microservice (Python 3.12 + FastAPI)
-│   ├── main.py                 # FastAPI Application Server (Port 8000)
-│   ├── parser.py               # Resume Information Extraction Engine
-│   ├── matcher.py              # Semantic Weighted Candidate-Job Fit Algorithm
-│   ├── test_ai_engine.py       # Comprehensive Python Unit Tests
-│   ├── requirements.txt        # Python Dependencies
-│   └── Dockerfile              # Python 3.12 Slim Container
-│
 ├── database/                   # Production Database Architecture & SQL Scripts
-│   ├── schema.sql              # ANSI SQL 8-Schema DDL Definition
-│   ├── seed.sql                # Production Seed Dataset
-│   └── ARCHITECTURE.md         # Data Dictionary & Entity Relationship Guide
-│
 ├── scripts/                    # DevOps & Infrastructure Shell Automation
-│   ├── setup_dev.sh            # Automated Environment Bootstrapper
-│   ├── backup_postgres.sh      # Automated Compressed PostgreSQL S3 Backup Script
-│   └── deploy.sh               # Zero-Downtime Multi-Container Deployment Script
-│
 ├── .github/workflows/          # CI/CD Automation
-│   └── ci.yml                  # Multi-Job Pipeline (Node.js, Python, Docker, Shell)
-│
-├── docs/                       # Training Portal, User Manuals & Interactive Demos
-│   ├── index.html              # Standalone Training & Video Portal
-│   ├── Pavion_US_Staffing_User_Manual.pdf # PDF Guide
-│   └── Pavion_Platform_Training_Video.gif # Animated HD Walkthrough
-│
-└── docker-compose.yml          # Multi-Container Orchestration (PG, Redis, API, AI, Web)
+└── docs/                       # Training Portal, User Manuals & Interactive Demos
 ```
 
 ---
@@ -177,7 +206,14 @@ uvicorn main:app --host 0.0.0.0 --port 8000 --reload
 - Endpoint Healthcheck: `http://localhost:8000/health`
 - Interactive OpenAPI Docs: `http://localhost:8000/docs`
 
-#### 3. Launch Backend REST Gateway (Port 5055)
+#### 3. Test High-Speed Go Search Indexer
+```bash
+cd tools/indexer
+go test -v ./...
+go run main.go
+```
+
+#### 4. Launch Backend REST Gateway (Port 5055)
 ```bash
 cd server
 npm install
@@ -188,7 +224,7 @@ npm run dev
 - Interactive Swagger UI: `http://localhost:5055/api-docs`
 - Prisma Studio: `npx prisma studio --port 5555`
 
-#### 4. Launch Frontend Web App (Port 3003)
+#### 5. Launch Frontend Web App (Port 3003)
 ```bash
 cd client
 npm install

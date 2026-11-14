@@ -1,0 +1,72 @@
+/* Pavion RTS - ATS-Friendly Typography & Layout */
+body {
+  font-family: Arial, Helvetica, sans-serif;
+  color: #111827;
+  line-height: 1.4;
+  margin: 0;
+  padding: 20px;
+  background-color: #f9fafb;
+}
+
+.resume-container {
+  max-width: 800px;
+  margin: 0 auto;
+  background: #ffffff;
+  padding: 40px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+.resume-header {
+  text-align: center;
+  border-bottom: 2px solid #0284c7;
+  padding-bottom: 12px;
+  margin-bottom: 20px;
+}
+
+.candidate-name {
+  margin: 0 0 6px 0;
+  font-size: 24px;
+  letter-spacing: 0.5px;
+  color: #0f172a;
+}
+
+.contact-bar {
+  font-size: 13px;
+  color: #475569;
+}
+
+.section-title {
+  font-size: 14px;
+  font-weight: bold;
+  text-transform: uppercase;
+  color: #0369a1;
+  border-bottom: 1px solid #e2e8f0;
+  padding-bottom: 4px;
+  margin: 18px 0 10px 0;
+}
+
+.skills-grid {
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+.experience-block {
+  margin-bottom: 16px;
+}
+
+.role-header {
+  display: flex;
+  justify-content: space-between;
+  font-size: 13.5px;
+  margin-bottom: 4px;
+}
+
+.role-bullets {
+  margin: 4px 0 0 18px;
+  padding: 0;
+  font-size: 12.5px;
+}
+
+.role-bullets li {
+  margin-bottom: 4px;
+}

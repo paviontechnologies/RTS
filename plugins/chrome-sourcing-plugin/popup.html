@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Pavion RTS Candidate Sourcer</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="plugin-header">
+    <div class="logo">Pavion RTS</div>
+    <span class="badge">Sourcer V3</span>
+  </div>
+  <div class="content-body">
+    <label>Candidate Name:</label>
+    <input type="text" id="candidateName" placeholder="Candidate Name">
+
+    <label>Current Title:</label>
+    <input type="text" id="candidateTitle" placeholder="e.g. Senior Cloud Engineer">
+
+    <label>Detected Skills:</label>
+    <input type="text" id="candidateSkills" placeholder="AWS, Python, Kubernetes">
+
+    <label>Target Requisition:</label>
+    <select id="targetReq">
+      <option value="REQ-AWS-001">REQ-AWS-001: Senior AWS Architect ($95/hr)</option>
+      <option value="REQ-FS-101">REQ-FS-101: Lead Java Spring Boot ($90/hr)</option>
+      <option value="REQ-DATA-201">REQ-DATA-201: Snowflake Data Engineer ($95/hr)</option>
+    </select>
+
+    <button id="importBtn" class="btn-primary">⚡ Import to ATS Pipeline</button>
+    <div id="statusMsg" class="status-msg"></div>
+  </div>
+  <script src="popup.js"></script>
+</body>
+</html>

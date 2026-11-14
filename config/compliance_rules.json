@@ -1,0 +1,16 @@
+{
+  "compliance_framework": "US Federal & State Staffing Compliance",
+  "work_authorizations": {
+    "USC": { "code": "US Citizen", "i9_list_a": ["US Passport"], "sponsorship_required": false },
+    "GC": { "code": "Permanent Resident", "i9_list_a": ["Permanent Resident Card I-551"], "sponsorship_required": false },
+    "H1B": { "code": "H-1B Specialty Occupation", "requires_lca": true, "i797_required": true },
+    "OPT_EAD": { "code": "F-1 Post-Completion OPT / STEM OPT", "stem_eligible_months": 24, "requires_everify": true },
+    "TN": { "code": "USMCA Professional", "citizenship": ["Canada", "Mexico"], "employer_letter": true }
+  },
+  "background_checks": {
+    "standard_7_year_criminal": true,
+    "10_panel_drug_screen": true,
+    "education_verification": true,
+    "employment_verification_years": 5
+  }
+}

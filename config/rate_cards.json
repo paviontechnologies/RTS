@@ -1,0 +1,29 @@
+{
+  "effective_year": 2026,
+  "rate_cards": [
+    {
+      "tier": "Tier-1 Cloud Architect",
+      "min_pay_rate": 85.00,
+      "max_pay_rate": 115.00,
+      "min_bill_rate": 115.00,
+      "max_bill_rate": 150.00,
+      "target_gross_margin_pct": 25.0
+    },
+    {
+      "tier": "Tier-2 Senior Full Stack Developer",
+      "min_pay_rate": 70.00,
+      "max_pay_rate": 95.00,
+      "min_bill_rate": 95.00,
+      "max_bill_rate": 125.00,
+      "target_gross_margin_pct": 24.5
+    },
+    {
+      "tier": "Tier-3 Mid Data Engineer",
+      "min_pay_rate": 60.00,
+      "max_pay_rate": 80.00,
+      "min_bill_rate": 80.00,
+      "max_bill_rate": 105.00,
+      "target_gross_margin_pct": 24.0
+    }
+  ]
+}

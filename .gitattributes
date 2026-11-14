@@ -1,20 +1,31 @@
-# Pavion RTS - GitHub Linguist Language & Attribute Definitions
+# Pavion RTS – GitHub Linguist Multi-Tier Language Configuration
 
 # Documentation
 docs/* linguist-documentation
 *.md linguist-documentation
 
-# Generated & Build Artifacts
-client/dist/* linguist-vendored
+# Vendored UI, Generated Artifacts & Seeds
+client/** linguist-vendored
+server/prisma/seed*.ts linguist-vendored
 server/dist/* linguist-vendored
 node_modules/* linguist-vendored
 .system_generated/* linguist-vendored
 
-# Explicit Language Classifications
+# Polyglot Multi-Tier Language Declarations
+agents/*.py linguist-language=Python
+batch/*.py linguist-language=Python
+evals/*.py linguist-language=Python
+reports/*.py linguist-language=Python
 services/ai-engine/*.py linguist-language=Python
+tools/indexer/*.go linguist-language=Go
 database/*.sql linguist-language=SQL
 server/prisma/migrations_postgresql/*.sql linguist-language=SQL
 scripts/*.sh linguist-language=Shell
+templates/resumes/*.html linguist-language=HTML
+templates/resumes/*.css linguist-language=CSS
+providers/*.ts linguist-language=TypeScript
+server/src/*.ts linguist-language=TypeScript
+server/src/**/*.ts linguist-language=TypeScript
 Dockerfile linguist-language=Dockerfile
 docker-compose.yml linguist-language=YAML
 .github/workflows/*.yml linguist-language=YAML

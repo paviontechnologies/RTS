@@ -1,0 +1,26 @@
+[
+  {
+    "id": "SD-01",
+    "topic": "Distributed Rate Limiter",
+    "scenario": "Design a distributed rate limiter protecting ATS public candidate intake APIs against DDoS and spam submissions.",
+    "evaluation_criteria": [
+      "Mentions Token Bucket or Leaky Bucket algorithm",
+      "Proposes Redis with Lua scripts or Sliding Window counter",
+      "Addresses clock drift and high-concurrency race conditions",
+      "Includes multi-tenant rate limits by organization ID"
+    ],
+    "ideal_score": 5
+  },
+  {
+    "id": "SD-02",
+    "topic": "High-Throughput Resume Search Engine",
+    "scenario": "Architect a search system capable of sub-millisecond keyword and skill queries across 2 million candidate resumes.",
+    "evaluation_criteria": [
+      "Inverted indexing and BM25 / TF-IDF relevance scoring",
+      "Vector embeddings for semantic synonym matching (e.g., K8s == Kubernetes)",
+      "Caching hot queries via Redis cluster",
+      "PostgreSQL GIN trigram indexing fallback"
+    ],
+    "ideal_score": 5
+  }
+]

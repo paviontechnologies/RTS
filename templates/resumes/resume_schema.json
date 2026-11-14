@@ -1,0 +1,29 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "PavionATSResumeSchema",
+  "type": "object",
+  "properties": {
+    "first_name": { "type": "string" },
+    "last_name": { "type": "string" },
+    "email": { "type": "string", "format": "email" },
+    "phone": { "type": "string" },
+    "location": { "type": "string" },
+    "work_authorization": { "type": "string", "enum": ["US Citizen", "Green Card", "H-1B", "OPT/CPT", "TN Visa", "C2C"] },
+    "total_experience_years": { "type": "number" },
+    "skills": { "type": "array", "items": { "type": "string" } },
+    "experiences": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "company": { "type": "string" },
+          "title": { "type": "string" },
+          "start_date": { "type": "string" },
+          "end_date": { "type": "string" },
+          "achievements": { "type": "array", "items": { "type": "string" } }
+        }
+      }
+    }
+  },
+  "required": ["first_name", "last_name", "email", "skills"]
+}

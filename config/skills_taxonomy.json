@@ -1,0 +1,26 @@
+{
+  "version": "2026.1",
+  "taxonomy_name": "Pavion US IT Staffing Skill Taxonomy",
+  "domains": {
+    "Cloud_DevOps": [
+      "AWS", "Amazon Web Services", "Azure", "Google Cloud", "GCP", "Kubernetes", "EKS", "AKS", "Docker",
+      "Terraform", "Ansible", "Helm", "Jenkins", "GitLab CI", "GitHub Actions", "ArgoCD", "Prometheus", "Datadog"
+    ],
+    "Languages_Frameworks": [
+      "Java", "Spring Boot", "Spring Cloud", "Hibernate", "Microservices", "Python", "FastAPI", "Django", "Flask",
+      "TypeScript", "JavaScript", "React", "React.js", "Next.js", "Angular", "Vue.js", "Node.js", "Express",
+      "Go", "Golang", "C#", ".NET Core", "Scala", "Ruby on Rails"
+    ],
+    "Data_AI": [
+      "Snowflake", "Databricks", "Apache Spark", "PySpark", "Kafka", "Airflow", "DBT", "Hadoop", "PostgreSQL",
+      "MySQL", "MongoDB", "Redis", "Cassandra", "DynamoDB", "Elasticsearch", "LangChain", "OpenAI", "Scikit-Learn"
+    ],
+    "Enterprise_CRM_ERP": [
+      "Salesforce", "Apex", "Visualforce", "LWC", "Lightning Web Components", "SAP S/4HANA", "ServiceNow",
+      "Workday", "PeopleSoft", "Oracle ERP"
+    ],
+    "QA_Testing": [
+      "Selenium", "Cypress", "Playwright", "JUnit", "TestNG", "PyTest", "Postman", "RestAssured", "JMeter"
+    ]
+  }
+}

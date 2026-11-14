@@ -1,0 +1,23 @@
+[
+  {
+    "id": "KO-01",
+    "category": "Work Authorization",
+    "question": "Are you legally authorized to work in the United States without current or future employer sponsorship?",
+    "expected_answer": "Yes",
+    "disqualify_on": ["No", "false"]
+  },
+  {
+    "id": "KO-02",
+    "category": "Background Check & Drug Screening",
+    "question": "Are you able to pass a 10-panel drug test and a comprehensive 7-year criminal background check required by the end client?",
+    "expected_answer": "Yes",
+    "disqualify_on": ["No", "unable", "false"]
+  },
+  {
+    "id": "KO-03",
+    "category": "Work Location & Commute",
+    "question": "Can you reliably commute to the client office in Plano, TX 3 days per week as required by the hybrid work policy?",
+    "expected_answer": "Yes",
+    "disqualify_on": ["No", "cannot", "remote only"]
+  }
+]

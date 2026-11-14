@@ -1,0 +1,33 @@
+{
+  "rubric_id": "TECH-RUBRIC-2026",
+  "name": "Full Stack & Cloud Technical Assessment",
+  "dimensions": [
+    {
+      "name": "System Architecture & Design",
+      "weight": 0.35,
+      "levels": {
+        "1": "Lacks distributed concepts, struggles with concurrency",
+        "3": "Solid microservices design, understands caching and DB indexing",
+        "5": "Expert in multi-region failover, event-driven streaming, and zero-downtime migrations"
+      }
+    },
+    {
+      "name": "Coding Proficiency & Problem Solving",
+      "weight": 0.35,
+      "levels": {
+        "1": "Syntax errors, suboptimal time/space complexity",
+        "3": "Clean code, correct algorithmic approach, handles edge cases",
+        "5": "Production-grade idioms, defensive programming, comprehensive test coverage"
+      }
+    },
+    {
+      "name": "Communication & Production Troubleshooting",
+      "weight": 0.30,
+      "levels": {
+        "1": "Unable to articulate debugging methodology",
+        "3": "Structured RCA (Root Cause Analysis), good team collaboration",
+        "5": "Exceptional post-mortem synthesis, proactive cross-functional leadership"
+      }
+    }
+  ]
+}

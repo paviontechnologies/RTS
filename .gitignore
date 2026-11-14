@@ -56,3 +56,13 @@ backups/
 
 # Redis dump
 dump.rdb
+
+# Go binaries & test artifacts
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+*.test
+*.out
+tools/indexer/indexer

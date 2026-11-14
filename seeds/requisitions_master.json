@@ -1,0 +1,38 @@
+[
+  {
+    "id": "REQ-2026-001",
+    "title": "Senior AWS Solutions Architect",
+    "client": "Tata Consultancy Services (TCS) / Citigroup",
+    "location": "Dallas, TX (Hybrid)",
+    "duration": "12+ Months C2H",
+    "bill_rate": 125.00,
+    "pay_rate_max": 95.00,
+    "required_skills": ["AWS", "Docker", "Kubernetes", "Terraform", "Python"],
+    "experience_min": 7.0,
+    "status": "Active"
+  },
+  {
+    "id": "REQ-2026-002",
+    "title": "Lead Java Spring Boot Microservices Developer",
+    "client": "Infosys / Capital One",
+    "location": "Plano, TX (Onsite)",
+    "duration": "6 Months Renewable",
+    "bill_rate": 110.00,
+    "pay_rate_max": 85.00,
+    "required_skills": ["Java", "Spring Boot", "Kafka", "Microservices", "PostgreSQL"],
+    "experience_min": 6.5,
+    "status": "Active"
+  },
+  {
+    "id": "REQ-2026-003",
+    "title": "Snowflake Data Platform Engineer",
+    "client": "Wipro / Healthcare Enterprise",
+    "location": "Remote (US)",
+    "duration": "12 Months",
+    "bill_rate": 115.00,
+    "pay_rate_max": 90.00,
+    "required_skills": ["Snowflake", "Python", "SQL", "DBT", "Airflow"],
+    "experience_min": 4.0,
+    "status": "Active"
+  }
+]

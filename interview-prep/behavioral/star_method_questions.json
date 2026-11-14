@@ -1,0 +1,24 @@
+[
+  {
+    "id": "BH-01",
+    "dimension": "Conflict Resolution & Stakeholder Management",
+    "question": "Describe a situation where a client hiring manager rejected your candidate submission without detailed feedback. How did you investigate and address it?",
+    "star_rubric": {
+      "Situation": "Candidate was strong on paper but rejected in first round.",
+      "Task": "Uncover the implicit client need without antagonizing the account manager.",
+      "Action": "Requested a 10-minute calibration call, analyzed interview scorecard gaps, and re-calibrated the sourcing Boolean query.",
+      "Result": "Submitted a targeted replacement candidate who was hired within 7 business days."
+    }
+  },
+  {
+    "id": "BH-02",
+    "dimension": "Urgent Deadlines & High Volume",
+    "question": "How do you prioritize candidate submittals when managing 5 concurrent urgent client requisitions with 48-hour SLA windows?",
+    "star_rubric": {
+      "Situation": "Multiple Fortune 500 VMS requisitions released simultaneously.",
+      "Task": "Deliver at least 3 qualified, vetted submittals per requisition within 48 hours.",
+      "Action": "Automated initial resume screening via Pavion AI engine, prioritized high-margin accounts, and engaged warm talent pools.",
+      "Result": "Achieved 100% on-time submittal rate and secured 3 client interview requests."
+    }
+  }
+]

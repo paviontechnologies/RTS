@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Pavion RTS - ATS-Compliant Candidate Resume</title>
+  <link rel="stylesheet" href="ats_resume.css">
+</head>
+<body>
+  <div class="resume-container">
+    <header class="resume-header">
+      <h1 class="candidate-name">{{FULL_NAME}}</h1>
+      <div class="contact-bar">
+        <span>{{LOCATION}}</span> &bull;
+        <span>{{PHONE}}</span> &bull;
+        <span>{{EMAIL}}</span> &bull;
+        <span>{{WORK_AUTHORIZATION}}</span>
+      </div>
+    </header>
+
+    <section class="resume-section">
+      <h2 class="section-title">PROFESSIONAL SUMMARY</h2>
+      <p class="summary-text">{{PROFESSIONAL_SUMMARY}}</p>
+    </section>
+
+    <section class="resume-section">
+      <h2 class="section-title">TECHNICAL SKILLS</h2>
+      <div class="skills-grid">
+        <div class="skill-category"><strong>Cloud & DevOps:</strong> {{CLOUD_SKILLS}}</div>
+        <div class="skill-category"><strong>Languages & Frameworks:</strong> {{FRAMEWORK_SKILLS}}</div>
+        <div class="skill-category"><strong>Databases:</strong> {{DATABASE_SKILLS}}</div>
+        <div class="skill-category"><strong>Tools & Methodologies:</strong> {{TOOL_SKILLS}}</div>
+      </div>
+    </section>
+
+    <section class="resume-section">
+      <h2 class="section-title">PROFESSIONAL EXPERIENCE</h2>
+      {{#each EXPERIENCES}}
+      <div class="experience-block">
+        <div class="role-header">
+          <span class="role-title"><strong>{{title}}</strong> - {{company}}</span>
+          <span class="role-dates">{{dates}}</span>
+        </div>
+        <ul class="role-bullets">
+          {{#each bullets}}
+          <li>{{this}}</li>
+          {{/each}}
+        </ul>
+      </div>
+      {{/each}}
+    </section>
+
+    <section class="resume-section">
+      <h2 class="section-title">EDUCATION & CERTIFICATIONS</h2>
+      <div class="education-block">
+        <div><strong>{{DEGREE}}</strong> - {{UNIVERSITY}}</div>
+        <div>{{CERTIFICATIONS}}</div>
+      </div>
+    </section>
+  </div>
+</body>
+</html>

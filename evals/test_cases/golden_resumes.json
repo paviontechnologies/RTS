@@ -1,0 +1,24 @@
+[
+  {
+    "id": "gold_01",
+    "text": "Aarav Sharma\nSenior Cloud DevOps Engineer\nEmail: aarav.sharma@example.com\nPhone: (555) 234-5678\nLocation: Dallas, TX (US Citizen)\nOver 8 years experience building AWS microservices with Docker, Kubernetes, Terraform, Python, and PostgreSQL.",
+    "expected": {
+      "name": "Aarav Sharma",
+      "email": "aarav.sharma@example.com",
+      "work_auth": "US Citizen",
+      "skills": ["AWS", "Docker", "Kubernetes", "Terraform", "Python", "PostgreSQL"],
+      "experience": 8.0
+    }
+  },
+  {
+    "id": "gold_02",
+    "text": "Priya Patel\nFull Stack React Engineer\nEmail: priya.patel@example.com\nPhone: (555) 987-6543\nLocation: Austin, TX (Green Card)\n6 years of full stack software development using React, TypeScript, Node.js, Next.js, and Redis.",
+    "expected": {
+      "name": "Priya Patel",
+      "email": "priya.patel@example.com",
+      "work_auth": "Green Card",
+      "skills": ["React", "TypeScript", "Node.js", "Next.js", "Redis"],
+      "experience": 6.0
+    }
+  }
+]
